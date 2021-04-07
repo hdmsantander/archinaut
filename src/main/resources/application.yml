@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: archinaut    
+logging:
+  level:
+    root: INFO
+    org.springframework.*: INFO
+    org.neo4j.*: INFO  
