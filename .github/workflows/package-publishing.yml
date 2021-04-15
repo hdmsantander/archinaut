@@ -1,0 +1,78 @@
+# This workflow will deploy to GitHub packages repository each
+# time there's a new release on the project
+
+# Name of this workflow
+name: Publish package to GitHub Packages
+
+# This workflow is triggered upon the creation of a new release
+on:
+  release:
+    types: [created]
+
+# The jobs on this workflow
+jobs:
+  # This job tests the package prior to a publication to the Maven repository
+  testing:
+    # Runs on the runner ubuntu-latest
+    # For more info: https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners
+    runs-on: ubuntu-latest
+
+    # These are the steps to take in this job
+    steps:
+      # Dowload a copy of this repository to the runner
+      - name: Checkout the repository into the runner
+        uses: actions/checkout@v2
+
+      # Setup the JDK 11 for x64
+      - name: Set up JDK 11 for a x64 architecture
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+          architecture: x64
+
+      # Cache the packages used by Maven to save time in future runs
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # Test the application using Maven
+      - name: Test application with Maven
+        run: mvn -B test --file pom.xml
+
+  publish:
+    # Runs on the runner ubuntu-latest
+    # For more info: https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners
+    runs-on: ubuntu-latest
+
+    # Needs a successful testing in order to deploy the package
+    needs: [testing]
+
+    # These are the steps to take in this job
+    steps:
+      # Dowload a copy of this repository to the runner
+      - name: Checkout the repository into the runner
+        uses: actions/checkout@v2
+
+      # Setup the JDK 11 for x64
+      - name: Set up JDK 11 for a x64 architecture
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+          architecture: x64
+
+      # Cache the packages used by Maven to save time in future runs
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # Deploy the package to the internal Maven repository
+      - name: Publish package
+        run: mvn -B deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
