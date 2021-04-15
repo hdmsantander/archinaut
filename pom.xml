@@ -10,6 +10,14 @@
 	<name>archinaut</name>
 	<description>A code complexity tool integrator and analyzer</description>
 
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/hdmsantander/archinaut</url>
+		</repository>
+	</distributionManagement>
+
 	<properties>
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
