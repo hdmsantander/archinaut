@@ -1,0 +1,28 @@
+# This workflow will perform archinaut analysis on the project and generate a report
+# on the metrics analyzed
+
+# This is the name of the workflow
+name: Archinaut analysis
+on: [push]
+jobs:
+  archinaut-analysis:
+    runs-on: ubuntu-latest
+    name: A job to perform archinaut analysis of source code
+    steps:
+      # Check out our repository
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+
+      # Do the Archinaut analysis over the last month of commits
+      - name: Archinaut analysis
+        id: archinaut
+        uses: hdmsantander/archinaut-action@main
+        with:
+          min cochanges: 0
+
+      # Store the Archinaut artifact
+      - name: Archive Archinaut results as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: archinaut
+          path: archinaut.csv
