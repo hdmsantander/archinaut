@@ -20,11 +20,11 @@ jobs:
     # These are the steps to take in this job
     steps:
       # Dowload a copy of this repository to the runner
-      - name: Checkout the repository into the runner
+      - name: Checkout
         uses: actions/checkout@v2
 
       # Setup the JDK 11 for x64
-      - name: Set up JDK 11 for a x64 architecture
+      - name: Set up JDK 11 for x64 architecture
         uses: actions/setup-java@v1
         with:
           java-version: 11
@@ -53,11 +53,11 @@ jobs:
     # These are the steps to take in this job
     steps:
       # Dowload a copy of this repository to the runner
-      - name: Checkout the repository into the runner
+      - name: Checkout
         uses: actions/checkout@v2
 
       # Setup the JDK 11 for x64
-      - name: Set up JDK 11 for a x64 architecture
+      - name: Set up JDK 11 for x64 architecture
         uses: actions/setup-java@v1
         with:
           java-version: 11

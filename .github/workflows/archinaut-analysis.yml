@@ -7,21 +7,21 @@ on: [push]
 jobs:
   archinaut-analysis:
     runs-on: ubuntu-latest
-    name: A job to perform archinaut analysis of source code
+    name: Archinaut analysis
     steps:
       # Check out our repository
       - name: Checkout
         uses: actions/checkout@v2.3.4
 
       # Do the Archinaut analysis over the last month of commits
-      - name: Archinaut analysis
+      - name: Analysis
         id: archinaut
         uses: hdmsantander/archinaut-action@main
         with:
           min cochanges: 0
 
       # Store the Archinaut artifact
-      - name: Archive Archinaut results as an artifact
+      - name: Upload CSV as artifact
         uses: actions/upload-artifact@v2
         with:
           name: archinaut
