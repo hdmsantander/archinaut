@@ -1,0 +1,40 @@
+---
+file: 'scc.csv'
+format: 'CSV'
+renaming:
+  pathSeparator: '/'
+  prefix: ''
+  suffix: ''
+  substitutions:
+    - order: 1
+      substitute: '.'
+      with: '_'
+metrics:
+  - name: 'Location'
+    filename: true
+  - name: 'Lines'
+    rename: 'SCC_LOC'
+  - name: 'Code'
+    rename: 'SCC_CLOC'
+  - name: 'Complexity'
+    rename: 'SCC_COMPLEXITY'
+---
+file: 'scc.csv'
+format: 'CSV'
+renaming:
+  pathSeparator: '/'
+  prefix: ''
+  suffix: ''
+  substitutions:
+    - order: 1
+      substitute: '.'
+      with: '_'
+metrics:
+  - name: 'Location'
+    filename: true
+  - name: 'Lines'
+    rename: 'SCC_LOC'
+  - name: 'Code'
+    rename: 'SCC_CLOC'
+  - name: 'Complexity'
+    rename: 'SCC_COMPLEXITY'
