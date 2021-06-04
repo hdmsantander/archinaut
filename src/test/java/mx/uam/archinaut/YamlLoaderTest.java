@@ -63,7 +63,7 @@ class YamlLoaderTest {
 
 		}
 
-		assertEquals(2, count);
+		assertEquals(4, count);
 
 	}
 	
