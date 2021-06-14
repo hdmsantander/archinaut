@@ -71,29 +71,7 @@ public class Delta {
 	public MatrixElement getDiffTargetElementVersion() {
 		return diffTarget;
 	}
-	
-	public ChangeStatus getElementChangeStatus() {
-		if(diffType == DiffType.DIFFTARGET_NEWER) {
-			if(diffTarget == null) {
-				return ChangeStatus.DELETED;
-			} else if (targetElementStatus == ElementStatus.RENAMED) {
-				return ChangeStatus.RENAMED;				
-			}
-		} else {
-			if(diffTarget == null) {
-				return ChangeStatus.ADDED;
-			} else {
-				if(original.getMetricValue(ElementMetric.SIZE) > diffTarget.getMetricValue(ElementMetric.SIZE)) {
-					return ChangeStatus.CHANGED_INCREASE;
-				} else if(original.getMetricValue(ElementMetric.SIZE) < diffTarget.getMetricValue(ElementMetric.SIZE)) {
-					return ChangeStatus.CHANGED_DECREASE;
-				}
-			}
-		}
-		return ChangeStatus.NONE;
-	}
-
-	
+		
 	public String toString() {
 		return "Delta for element "+original+" Status:"+elementChangeStatus;
 	}

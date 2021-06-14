@@ -495,31 +495,7 @@ public class TrendsAnalysis implements Serializable {
 		results.add(newFiles);
 		results.add(renamed);
 		results.add(deleted);
-		
-		for (ElementMetric metric:ElementMetric.values()) {
-			String [] decreases = new String [matrixes.size()+2];
-			String [] increases = new String [matrixes.size()+2];
-			
-			decreases[0]=metric.getText();
-			increases[0]=metric.getText();
-			
-			decreases[1]="decreases";
-			increases[1]="increases";
-			
-			
-			for(int snapshot = 0; snapshot < matrixes.size(); snapshot++) {
-				int [] totals = getTotalsForShapshot(snapshot,metric,deltas);
-				int decreaseForMetric = totals [0];
-				int increaseForMetric = totals [1];
 				
-				decreases[snapshot+2] = Integer.toString(decreaseForMetric);
-				increases[snapshot+2] = Integer.toString(increaseForMetric);
-			}
-			
-			results.add(decreases);
-			results.add(increases);
-		}
-		
 		return results;
 		
 	}

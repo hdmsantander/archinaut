@@ -1,0 +1,358 @@
+{
+  "schemaVersion" : "1.0",
+  "name" : "depends-sdsm",
+  "variables" : [ "main.java.com.uam.spaceinvaders.App_java", "main.java.com.uam.spaceinvaders.audio.Audio_java", "main.java.com.uam.spaceinvaders.entities.Sandbag_java", "main.java.com.uam.spaceinvaders.entities.Spaceship_java", "main.java.com.uam.spaceinvaders.entities.aliens.Alien_java", "main.java.com.uam.spaceinvaders.entities.aliens.GreenAlien_java", "main.java.com.uam.spaceinvaders.entities.aliens.RedAlien_java", "main.java.com.uam.spaceinvaders.entities.aliens.WhiteAlien_java", "main.java.com.uam.spaceinvaders.entities.aliens.YellowAlien_java", "main.java.com.uam.spaceinvaders.entities.interfaces.MovableComponent_java", "main.java.com.uam.spaceinvaders.entities.projectiles.AlienProjectile_java", "main.java.com.uam.spaceinvaders.entities.projectiles.Projectile_java", "main.java.com.uam.spaceinvaders.entities.projectiles.SpaceshipProjectile_java", "main.java.com.uam.spaceinvaders.levels.LevelOne_java", "main.java.com.uam.spaceinvaders.levels.Level_java", "main.java.com.uam.spaceinvaders.presentation.GameFrame_java", "main.java.com.uam.spaceinvaders.presentation.GamePanel_java" ],
+  "cells" : [ {
+    "src" : 7,
+    "dest" : 14,
+    "values" : {
+      "Import" : 1.0,
+      "Parameter" : 1.0
+    }
+  }, {
+    "src" : 6,
+    "dest" : 4,
+    "values" : {
+      "Call" : 2.0,
+      "Extend" : 1.0
+    }
+  }, {
+    "src" : 4,
+    "dest" : 16,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Use" : 2.0
+    }
+  }, {
+    "src" : 12,
+    "dest" : 3,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Parameter" : 1.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 4,
+    "dest" : 14,
+    "values" : {
+      "Call" : 4.0,
+      "Import" : 1.0,
+      "Return" : 1.0,
+      "Use" : 1.0,
+      "Parameter" : 1.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 13,
+    "dest" : 16,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Parameter" : 1.0
+    }
+  }, {
+    "src" : 10,
+    "dest" : 14,
+    "values" : {
+      "Call" : 1.0
+    }
+  }, {
+    "src" : 5,
+    "dest" : 4,
+    "values" : {
+      "Call" : 2.0,
+      "Extend" : 1.0
+    }
+  }, {
+    "src" : 10,
+    "dest" : 16,
+    "values" : {
+      "Call" : 1.0
+    }
+  }, {
+    "src" : 15,
+    "dest" : 16,
+    "values" : {
+      "Call" : 2.0,
+      "Use" : 1.0,
+      "Create" : 1.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 12,
+    "dest" : 11,
+    "values" : {
+      "Call" : 2.0,
+      "Extend" : 1.0
+    }
+  }, {
+    "src" : 16,
+    "dest" : 3,
+    "values" : {
+      "Call" : 4.0,
+      "Import" : 1.0,
+      "Use" : 1.0,
+      "Create" : 1.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 7,
+    "dest" : 4,
+    "values" : {
+      "Call" : 2.0,
+      "Extend" : 1.0
+    }
+  }, {
+    "src" : 8,
+    "dest" : 14,
+    "values" : {
+      "Import" : 1.0,
+      "Parameter" : 1.0
+    }
+  }, {
+    "src" : 14,
+    "dest" : 16,
+    "values" : {
+      "Call" : 2.0,
+      "Import" : 1.0,
+      "Return" : 1.0,
+      "Use" : 2.0,
+      "Parameter" : 1.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 11,
+    "dest" : 16,
+    "values" : {
+      "Import" : 1.0,
+      "Return" : 1.0,
+      "Use" : 2.0,
+      "Parameter" : 1.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 10,
+    "dest" : 4,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Parameter" : 1.0
+    }
+  }, {
+    "src" : 8,
+    "dest" : 4,
+    "values" : {
+      "Call" : 2.0,
+      "Extend" : 1.0
+    }
+  }, {
+    "src" : 3,
+    "dest" : 1,
+    "values" : {
+      "Call" : 4.0,
+      "Import" : 1.0,
+      "Use" : 2.0,
+      "Create" : 2.0,
+      "Contain" : 2.0
+    }
+  }, {
+    "src" : 3,
+    "dest" : 16,
+    "values" : {
+      "Call" : 3.0,
+      "Import" : 1.0,
+      "Return" : 1.0,
+      "Use" : 2.0,
+      "Parameter" : 1.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 14,
+    "dest" : 11,
+    "values" : {
+      "Call" : 2.0,
+      "Import" : 1.0,
+      "Use" : 2.0,
+      "Parameter" : 3.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 0,
+    "dest" : 15,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Create" : 1.0
+    }
+  }, {
+    "src" : 5,
+    "dest" : 14,
+    "values" : {
+      "Import" : 1.0,
+      "Parameter" : 1.0
+    }
+  }, {
+    "src" : 3,
+    "dest" : 9,
+    "values" : {
+      "Import" : 1.0,
+      "Implement" : 1.0
+    }
+  }, {
+    "src" : 13,
+    "dest" : 1,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Create" : 1.0
+    }
+  }, {
+    "src" : 10,
+    "dest" : 11,
+    "values" : {
+      "Call" : 3.0,
+      "Extend" : 1.0
+    }
+  }, {
+    "src" : 14,
+    "dest" : 4,
+    "values" : {
+      "Call" : 4.0,
+      "Import" : 1.0,
+      "Use" : 6.0,
+      "Parameter" : 3.0,
+      "Contain" : 3.0
+    }
+  }, {
+    "src" : 13,
+    "dest" : 3,
+    "values" : {
+      "Import" : 1.0,
+      "Parameter" : 1.0
+    }
+  }, {
+    "src" : 13,
+    "dest" : 2,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Create" : 1.0,
+      "Use" : 4.0
+    }
+  }, {
+    "src" : 14,
+    "dest" : 3,
+    "values" : {
+      "Call" : 2.0,
+      "Import" : 1.0,
+      "Use" : 5.0,
+      "Parameter" : 1.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 13,
+    "dest" : 14,
+    "values" : {
+      "Call" : 5.0,
+      "Extend" : 1.0,
+      "Use" : 8.0
+    }
+  }, {
+    "src" : 3,
+    "dest" : 14,
+    "values" : {
+      "Call" : 1.0
+    }
+  }, {
+    "src" : 14,
+    "dest" : 2,
+    "values" : {
+      "Call" : 2.0,
+      "Import" : 1.0,
+      "Use" : 3.0,
+      "Parameter" : 3.0,
+      "Contain" : 2.0
+    }
+  }, {
+    "src" : 14,
+    "dest" : 1,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Use" : 1.0,
+      "Parameter" : 1.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 13,
+    "dest" : 4,
+    "values" : {
+      "Call" : 2.0,
+      "Import" : 1.0,
+      "Use" : 2.0,
+      "Contain" : 2.0
+    }
+  }, {
+    "src" : 16,
+    "dest" : 14,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Return" : 1.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 3,
+    "dest" : 12,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Create" : 1.0
+    }
+  }, {
+    "src" : 13,
+    "dest" : 7,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Create" : 1.0
+    }
+  }, {
+    "src" : 16,
+    "dest" : 15,
+    "values" : {
+      "Call" : 2.0,
+      "Use" : 1.0,
+      "Parameter" : 1.0,
+      "Contain" : 1.0
+    }
+  }, {
+    "src" : 3,
+    "dest" : 11,
+    "values" : {
+      "Call" : 4.0,
+      "Import" : 1.0,
+      "Use" : 4.0,
+      "Parameter" : 3.0,
+      "Contain" : 3.0
+    }
+  }, {
+    "src" : 16,
+    "dest" : 13,
+    "values" : {
+      "Call" : 1.0,
+      "Import" : 1.0,
+      "Use" : 1.0,
+      "Create" : 1.0
+    }
+  }, {
+    "src" : 6,
+    "dest" : 14,
+    "values" : {
+      "Import" : 1.0,
+      "Parameter" : 1.0
+    }
+  } ]
+}

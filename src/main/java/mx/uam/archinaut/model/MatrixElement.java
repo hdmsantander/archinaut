@@ -1,9 +1,13 @@
 package mx.uam.archinaut.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -45,7 +49,7 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	private List <ElementConstraint> constraints = new ArrayList <> ();
 	
 	// Element metrics
-	private int [] metrics = new int [ElementMetric.values().length];
+	private Map<String, Integer> metrics = new HashMap<>();
 	
 	private Set <HotspotData> hotspotData;
 	
@@ -140,8 +144,15 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	 * @param value
 	 * @return
 	 */
-	public boolean setMetricValue(ElementMetric type, int value) {
-		metrics[type.getIndex()] = value;
+	public boolean addMetricValue(ElementMetric metric) {
+		
+		// If there's already a metric with that name for this element add the values together, else put the value as is
+		if (metrics.containsKey(metric.getName())) {
+			metrics.put(metric.getName(), metrics.get(metric.getName()) + metric.getValue());
+		} else {
+			metrics.put(metric.getName(), metric.getValue());
+		}
+		
 		return true;
 	}
 
@@ -150,8 +161,12 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	 * @param type
 	 * @return
 	 */
-	public int getMetricValue(ElementMetric type) {
-		return metrics[type.getIndex()];
+	public int getMetricValue(ElementMetric metric) {
+		return metrics.get(metric.getName());
+	}
+	
+	public int getMetricValue(String metric) {
+		return metrics.get(metric);
 	}
 
 	/**
@@ -159,7 +174,7 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	 * 
 	 * @return
 	 */
-	public int [] getMetrics() {
+	public Map<String, Integer> getMetrics() {
 		return metrics;
 	}
 	
@@ -286,20 +301,7 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	public String toString() {
 		return getName();
 	}
-	
-	/**
-	 * 
-	 * @param smell
-	 */
-	public void addDesignSmell(String smell) {
-		if(designSmells == null) {
-			designSmells = new HashSet <> ();
-		}
 		
-		designSmells.add(smell);
-		metrics[ElementMetric.DESIGNSMELLS.getIndex()]=designSmells.size();
-	}
-	
 	/**
 	 * 
 	 * @return
@@ -386,13 +388,13 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	 * @return
 	 */
 	public String getDetails() {
+		
 		StringBuilder message = new StringBuilder ("Element: "+getFullName());
 		
-		for(ElementMetric metric:ElementMetric.values()) {
-			message.append("\n"+metric.getText()+": "+getMetricValue(metric));
+		for (Entry<String, Integer> e : metrics.entrySet()) {
+			message.append("\n"+e.getKey()+": "+e.getValue());
 		}
-		
-		
+				
 		return message.toString();
 
 	}

@@ -1,6 +1,7 @@
 package mx.uam.archinaut.services;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.xml.bind.JAXBException;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Component;
+
+import com.opencsv.exceptions.CsvValidationException;
 
 import lombok.extern.slf4j.Slf4j;
 import mx.uam.archinaut.model.DesignStructureMatrix;
@@ -119,10 +122,9 @@ public class CliService implements CommandLineRunner {
 	}
 
 	public void headless(String dependsFilename, String frecuenciesFilename, String couplingFilename,
-			String sccFilename) throws JAXBException {
+			String sccFilename) throws JAXBException, CsvValidationException, IOException {
 
-		DesignStructureMatrix matrix = dsmService.loadMatrixAndData("stuff", dependsFilename, "", "", "", '/',
-				false, new ArrayList<String>(), frecuenciesFilename, couplingFilename, sccFilename, "", "", "", "");
+		DesignStructureMatrix matrix = dsmService.loadDataBasedOnConfigurationFile();
 		
 		metricsService.saveMetricsReport(matrix, "archinaut.csv");
 

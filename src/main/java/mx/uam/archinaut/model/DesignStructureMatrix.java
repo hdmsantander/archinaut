@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import lombok.extern.slf4j.Slf4j;
-import mx.uam.archinaut.data.loader.DesignStructureMatrixLoader;
 import mx.uam.archinaut.model.MatrixElement.ElementStatus;
 
 
@@ -53,10 +52,10 @@ public class DesignStructureMatrix implements Serializable {
 	private int [] maximumDependencyValues = new int [DependencyMetric.values().length];
 
 	// Maximums for element values
-	private int [] maximumElementValues = new int [ElementMetric.values().length];
+	private Map<String, Integer> maximumElementValues = new HashMap<>();
 
 	// Maximums for element values
-	private int [] minimumElementValues = new int [ElementMetric.values().length];
+	private Map<String, Integer> minimumElementValues = new HashMap<>();
 		
 	private String fileName;
 	
@@ -112,6 +111,10 @@ public class DesignStructureMatrix implements Serializable {
 	 */
 	public String getFileName() {
 		return fileName;
+	}
+	
+	public Set<String> getMetricNames() {
+		return elements.get(0).getMetrics().keySet();
 	}
 	
 	/**
@@ -368,21 +371,21 @@ public class DesignStructureMatrix implements Serializable {
 
 	
 	public boolean setMaximumElementValue(ElementMetric type, int value) {
-		maximumElementValues[type.getIndex()] = value;
+		maximumElementValues.put(type.getName(), value);
 		return true;
 	}
 
 	public int getMaximumElementValue(ElementMetric type) {
-		return maximumElementValues[type.getIndex()];
+		return maximumElementValues.get(type.getName());
 	}
 	
 	public boolean setMinumElementValue(ElementMetric type, int value) {
-		minimumElementValues[type.getIndex()] = value;
+		minimumElementValues.put(type.getName(), value);
 		return true;
 	}
 
 	public int getMinimumElementValue(ElementMetric type) {
-		return minimumElementValues[type.getIndex()];
+		return minimumElementValues.get(type.getName());
 	}
 
 	
@@ -436,6 +439,8 @@ public class DesignStructureMatrix implements Serializable {
 		return exclusionStrings;
 	}
 
-
+	public boolean hasElementWithName(String name) {
+		return fullNameElementsMap.containsKey(name);
+	}
 	
 }

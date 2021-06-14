@@ -46,7 +46,7 @@ public class JunitService {
 			int skipped = 0;
 		
 			// Iterate over the metrics for this element
-			for(ElementMetric metric:ElementMetric.values()) {
+			for(String metric : element.getMetrics().keySet()) {
 								
 				// Try to generate a test case for this metric for this element
 				Optional<Testcase> t = getTestCaseForMetric(element, metric);
@@ -80,9 +80,9 @@ public class JunitService {
 		jaxbMarshaller.marshal(testSuites, file);
 	}
 	
-	private Optional<Testcase> getTestCaseForMetric(MatrixElement m, ElementMetric e) {
+	private Optional<Testcase> getTestCaseForMetric(MatrixElement m, String metric) {
 		
-		String envName = "INPUT_" + e.getText().toUpperCase().replace(" ", "_").trim();
+		String envName = "INPUT_" + metric.toUpperCase().replace(" ", "_").trim();
 		
 		try {
 			
@@ -91,17 +91,17 @@ public class JunitService {
 				Integer value = Integer.parseInt(environmentVariables.get(envName));
 				
 				Testcase t = new Testcase();
-				t.setName(e.getText().toUpperCase());
+				t.setName(metric.toUpperCase());
 				t.setClassname(m.getName());
 				
-				if (m.getMetricValue(e) < value) {
+				if (m.getMetricValue(metric) < value) {
 					t.setError(null);
 				} else {
 					Testsuite.Testcase.Error error = new Testsuite.Testcase.Error();
-					error.setMessage("Max threshold was reached for " + e.getText().toUpperCase() + " value is: " + m.getMetricValue(e) + " threshold is: " + value);
+					error.setMessage("Max threshold was reached for " + metric.toUpperCase() + " value is: " + m.getMetricValue(metric) + " threshold is: " + value);
 					t.setError(error);
 					error.setType("maximumValueReached");
-					error.setValue("Max threshold was reached for " + e.getText().toUpperCase() + " value is: " + m.getMetricValue(e) + " threshold is: " + value);
+					error.setValue("Max threshold was reached for " + metric.toUpperCase() + " value is: " + m.getMetricValue(metric) + " threshold is: " + value);
 				}
 				
 				return Optional.of(t);				

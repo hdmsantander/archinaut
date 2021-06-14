@@ -1,5 +1,7 @@
 package mx.uam.archinaut.services;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,8 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.opencsv.exceptions.CsvValidationException;
+
 import lombok.extern.slf4j.Slf4j;
 import mx.uam.archinaut.data.loader.DesignStructureMatrixLoader;
+import mx.uam.archinaut.data.loader.YamlLoader;
 import mx.uam.archinaut.data.nameprocessing.NameProcessor;
 import mx.uam.archinaut.data.nameprocessing.PrefixRemovalNameProcessor;
 import mx.uam.archinaut.model.DependencyMetric;
@@ -22,6 +27,7 @@ import mx.uam.archinaut.model.DesignStructureMatrixModel;
 import mx.uam.archinaut.model.MatrixDependencyGroup;
 import mx.uam.archinaut.model.MatrixElement;
 import mx.uam.archinaut.model.MatrixElementGroup;
+import mx.uam.archinaut.model.yaml.YamlConfigurationEntry;
 
 /**
  * 
@@ -37,6 +43,8 @@ public class DesignStructureMatrixService {
 	
 	private static final Logger log = LoggerFactory.getLogger(DesignStructureMatrixService.class);
 	
+	public static final String CONFIGURATION_FILENAME = "configuration.yml";
+	
 	@Autowired
 	private DesignStructureMatrixLoader loader;
 	
@@ -45,6 +53,9 @@ public class DesignStructureMatrixService {
 	
 	@Autowired
 	private GitLogService gitService;
+	
+	@Autowired
+	private YamlLoader yamlLoader;
 
 	/**
 	 * Loads a matrix from a JSON file
@@ -147,54 +158,6 @@ public class DesignStructureMatrixService {
 
 		
 	}
-	
-	/**
-	 * 
-	 * @param fileName
-	 * @param folderName
-	 * @param elementPrefix
-	 * @param metricsPrefix
-	 * @param logPrefix
-	 * @param pathSeparator
-	 * @return
-	 */
-	public DesignStructureMatrix loadMatrixAndData(String name, String fileName, String elementPrefix, String metricsPrefix, String logPrefix, char pathSeparator, boolean loadRenames, List <String> exclusions,
-			String frequenciesFilename, String couplingFilename, String sccFilename, String typeMetricsFilename, String designSmellsFilename, String methodMetricsFilename, String renamedFilesCsvFilename) {
-		
-		DesignStructureMatrix matrix = loadMatrixFromJSON(name, fileName, elementPrefix, exclusions);
-
-		if(matrix!=null) {
-			
-			createNamespaceGrouping(matrix,'.');
-			
-			int metricsMatches;
-			
-	        metricsService.loadSccFromCSV(sccFilename, matrix, logPrefix, pathSeparator);
-			
-			metricsService.calculateDependenciesForElements(matrix);
-			
-			int logMatches = gitService.loadGitLogAnalysisFromCSV(matrix, logPrefix, pathSeparator, frequenciesFilename, couplingFilename);
-						
-			
-			metricsMatches = metricsService.loadMethodMetricsFromCSV(typeMetricsFilename, designSmellsFilename, methodMetricsFilename, matrix, metricsPrefix, pathSeparator);
-			
-			if(loadRenames) {
-				gitService.loadRenameFile(matrix, renamedFilesCsvFilename,logPrefix,pathSeparator);
-			}
-			
-			int refactoringMatches = 0;
-			
-			log.info("Loaded "+matrix.getName()+" with "+matrix.getElementsCount()+" elements, metrics matches = "+metricsMatches+"metricsPrefix= "+metricsPrefix+" log matches = "+logMatches+ " refactoring ops = "+refactoringMatches+" log prefix = "+logPrefix);
-
-			
-			matrix.setElementNamesPrefix(elementPrefix);
-			matrix.setLogNamesPrefix(logPrefix);
-			matrix.setMetricsNamesPrefix(metricsPrefix);
-		}
-		
-		return matrix;
-	}
-
 		
 	/**
 	 * Create a DSM that groups the elements hierarchically by namespace
@@ -392,6 +355,32 @@ public class DesignStructureMatrixService {
 		return new DesignStructureMatrixModel(matrix, elements);
 
 	}
-
 	
+	public DesignStructureMatrix loadDataBasedOnConfigurationFile() throws IOException, CsvValidationException {
+		
+		// Get the configuration associated with the depends JSON file
+		YamlConfigurationEntry dependsConfiguration = yamlLoader.getDependsConfigurationEntry();
+		
+		// Get the configuration associated with the rest of the entries in the configuration file
+		List<YamlConfigurationEntry> configurationEntries = yamlLoader.getNonDependsConfigurationEntries();
+		
+		// Load the initial matrix using the depends configuration
+		DesignStructureMatrix matrix = loadMatrixFromJSON(dependsConfiguration);
+		
+		// Create the grouping of the elements based on the package level
+		createNamespaceGrouping(matrix,'.');
+		
+		// Load all metrics defined in the configuration file, but depends as that was already loaded.
+		metricsService.loadMetrics(configurationEntries, matrix);		
+		
+		return matrix;
+		
+	}
+	
+	private DesignStructureMatrix loadMatrixFromJSON(YamlConfigurationEntry dependsConfiguration) {
+		
+		return null;
+		
+	}
+
 }
