@@ -1,10 +1,7 @@
 package mx.uam.archinaut.services;
 
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
@@ -21,8 +18,6 @@ import mx.uam.archinaut.data.nameprocessing.CharacterSubstituteNameProcessor;
 import mx.uam.archinaut.data.nameprocessing.NameProcessor;
 import mx.uam.archinaut.data.nameprocessing.PrefixRemovalNameProcessor;
 import mx.uam.archinaut.model.DesignStructureMatrix;
-import mx.uam.archinaut.model.DesignStructureMatrixModel;
-import mx.uam.archinaut.model.ElementMethod;
 import mx.uam.archinaut.model.MatrixElement;
 import mx.uam.archinaut.model.yaml.Metric;
 import mx.uam.archinaut.model.yaml.YamlConfigurationEntry;
@@ -81,14 +76,20 @@ public class MetricsService {
 	
 	private DesignStructureMatrix loadCsvFileIntoMatrix(YamlConfigurationEntry yamlConfiguration, DesignStructureMatrix matrix) throws IOException, CsvValidationException {
 		
+		NameProcessor processor = new PrefixRemovalNameProcessor(yamlConfiguration.getRenaming().getPrefix());
+		NameProcessor renameProcessor = new CharacterSubstituteNameProcessor('.', '_');
+		
 		// Get the current file loaded into the reader
-		try (CSVReaderHeaderAware reader = new CSVReaderHeaderAware(new FileReader(yamlConfiguration.getFile()))) {
+		try (CSVReaderHeaderAware reader = new CSVReaderHeaderAware( new InputStreamReader(getClass().getClassLoader().getResourceAsStream(yamlConfiguration.getFile())) ) ) {
 			
 			Map<String, String> values = reader.readMap();
 			
 			while(values != null) {
 				
 				String fileName = values.get(yamlConfiguration.getFilenameMetricName());
+				fileName = processor.processName(fileName);
+				
+				System.out.println(fileName);
 				
 				// Only proceed with this entry if there's a filename and that filename is in the matrix already
 				if (!StringUtils.isBlank(fileName) && matrix.hasElementWithName(fileName)) {

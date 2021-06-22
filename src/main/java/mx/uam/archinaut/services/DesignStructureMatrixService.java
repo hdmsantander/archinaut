@@ -1,7 +1,9 @@
 package mx.uam.archinaut.services;
 
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.stream.JsonReader;
 import com.opencsv.exceptions.CsvValidationException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -377,10 +380,12 @@ public class DesignStructureMatrixService {
 		
 	}
 	
-	private DesignStructureMatrix loadMatrixFromJSON(YamlConfigurationEntry dependsConfiguration) {
+	public DesignStructureMatrix loadMatrixFromJSON(YamlConfigurationEntry dependsConfiguration) {
+				
+		NameProcessor processor = new PrefixRemovalNameProcessor(dependsConfiguration.getRenaming().getPrefix());
 		
-		return null;
-		
+		return loader.loadFromJSON("archinaut", dependsConfiguration.getFile(), processor);
+				
 	}
 
 }

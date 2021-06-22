@@ -21,8 +21,9 @@ SOFTWARE.
 */
 package mx.uam.archinaut.data.loader;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 
@@ -64,8 +65,10 @@ public class DesignStructureMatrixLoader {
         try  {
         	
     		log.info("Loading JSON depends output from: ",filename);
+    		
+    		InputStream is = getClass().getClassLoader().getResourceAsStream(filename);
         	
-        	Reader reader = new FileReader(filename);
+        	Reader reader = new InputStreamReader(is);
         	
             // Convert JSON File to Java Object			
         	JsonReader jsonReader = new JsonReader(reader);
