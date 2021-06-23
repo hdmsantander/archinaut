@@ -448,7 +448,7 @@ public class TrendsAnalysis implements Serializable {
 		i=0;
 		
 		for(DesignStructureMatrix matrix:matrixes) {
-			names[matrixes.size()-1-i] = matrix.getName();
+			names[matrixes.size()-1-i] = "matrix";
 			i++;
 		}
 		return names;

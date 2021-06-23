@@ -9,6 +9,9 @@ renaming:
     - order: 1
       substitute: '.'
       with: '_'
+    - order: 2
+      substitute: '/'
+      with: '_'
 metrics:
   - name: 'Location'
     filename: true
@@ -28,6 +31,9 @@ renaming:
   substitutions:
     - order: 1
       substitute: '.'
+      with: '_'
+    - order: 2
+      substitute: '/'
       with: '_'
 metrics:
   - name: 'entity'
@@ -50,6 +56,9 @@ renaming:
   substitutions:
     - order: 1
       substitute: '.'
+      with: '_'
+    - order: 2
+      substitute: '/'
       with: '_'
 metrics:
   - name: 'entity'

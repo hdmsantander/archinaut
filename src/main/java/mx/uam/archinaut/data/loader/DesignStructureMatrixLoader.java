@@ -26,7 +26,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.stream.JsonReader;
@@ -37,6 +39,7 @@ import mx.uam.archinaut.data.nameprocessing.NameProcessor;
 import mx.uam.archinaut.model.DesignStructureMatrix;
 import mx.uam.archinaut.model.MatrixDependencyGroup;
 import mx.uam.archinaut.model.MatrixElement;
+import mx.uam.archinaut.model.yaml.RenamingConfiguration;
 
 /**
  * 
@@ -49,6 +52,9 @@ import mx.uam.archinaut.model.MatrixElement;
 @Slf4j
 @Component
 public class DesignStructureMatrixLoader {
+	
+	@Autowired
+	private NameProcessor nameProcessor;
 		
 	/**
 	 * This method loads a file produced by depends using the following option
@@ -58,9 +64,9 @@ public class DesignStructureMatrixLoader {
 	 * @param filename the path of the file
 	 * @return a DesignStructureMatrix
 	 */
-	public DesignStructureMatrix loadFromJSON (String name, String filename, NameProcessor processor) {
+	public DesignStructureMatrix loadFromJSON (String filename, RenamingConfiguration renamingConfiguration) {
 		
-		ArrayList <MatrixElement> elements = new ArrayList<>();
+		List <MatrixElement> elements = new ArrayList<>();
 		
         try  {
         	
@@ -91,7 +97,7 @@ public class DesignStructureMatrixLoader {
 
             while(token!=JsonToken.END_ARRAY) {
                 String value = jsonReader.nextString();
-                value = processor.processName(value);
+                value = nameProcessor.processName(renamingConfiguration, value);
                 
                 elements.add(new MatrixElement(value)); // consume file name
                 token = jsonReader.peek();
@@ -150,7 +156,7 @@ public class DesignStructureMatrixLoader {
             return null;
         }
         
-        DesignStructureMatrix matrix = new DesignStructureMatrix(name, filename, elements);
+        DesignStructureMatrix matrix = new DesignStructureMatrix(filename, elements);
         
         return matrix;        
 	}

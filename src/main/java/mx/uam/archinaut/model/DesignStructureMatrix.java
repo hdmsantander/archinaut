@@ -23,9 +23,6 @@ import mx.uam.archinaut.model.MatrixElement.ElementStatus;
 public class DesignStructureMatrix implements Serializable {
 	
 	private static final long serialVersionUID = -7697462458971200457L;
-
-	// Name of this matrix
-	private String name;
 		
 	// The root group
 	private MatrixElementGroup root;
@@ -78,11 +75,14 @@ public class DesignStructureMatrix implements Serializable {
 	 * @param elements an array with the names of the elements
 	 * @param dependencies a square array with DesignStructureMatrixCells which contain the details of the dependencies
 	 */
-	public DesignStructureMatrix(String name, String fileName, List <MatrixElement> elements) {
+	public DesignStructureMatrix(String fileName, List <MatrixElement> elements) {
 		
-		this.name = name;
 		this.fileName = fileName;
 		this.elements = elements;
+		
+		for (MatrixElement m : elements) {
+			this.fullNameElementsMap.put(m.getFullName(), m);
+		}
 		
 		if(elements.size()>0) {
 			StringTokenizer tokenizer = new StringTokenizer(elements.get(0).getFullName(),"_");
@@ -348,18 +348,6 @@ public class DesignStructureMatrix implements Serializable {
 		return total;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public String getName() {
-		return name;
-	}
-	
-	public String toString() {
-		return name;
-	}
-
 	public boolean setMaximumDependencyValue(DependencyMetric type, int value) {
 		maximumDependencyValues[type.getIndex()] = value;
 		return true;

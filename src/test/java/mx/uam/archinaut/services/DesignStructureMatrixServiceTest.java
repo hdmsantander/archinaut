@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import mx.uam.archinaut.data.nameprocessing.NameProcessor;
 import mx.uam.archinaut.model.DesignStructureMatrix;
 import mx.uam.archinaut.model.MatrixElement;
 
@@ -15,6 +16,9 @@ class DesignStructureMatrixServiceTest extends AbstractServiceTest {
 	
 	@Autowired
 	private DesignStructureMatrixService designStructureMatrixService;
+	
+	@Autowired
+	private NameProcessor nameProcessor;
 	
 	@Test
 	void loadMatrixFromJSONTest() {
@@ -36,15 +40,20 @@ class DesignStructureMatrixServiceTest extends AbstractServiceTest {
 			    "main.java.com.uam.spaceinvaders.levels.Level_java",
 			    "main.java.com.uam.spaceinvaders.presentation.GameFrame_java",
 			    "main.java.com.uam.spaceinvaders.presentation.GamePanel_java"};
-		
+				
 		DesignStructureMatrix matrix = designStructureMatrixService.loadMatrixFromJSON(dependsConfigurationEntry);
+		
 		assertNotNull(matrix);
 		
 		assertEquals(17, matrix.getElementsCount());
 		
 		int i = 0;
 		for (MatrixElement m : matrix.getElements()) {
-			assertEquals(true, filenames[i].contains(m.getFullName()));
+			
+			String filename = nameProcessor.processName(dependsConfigurationEntry.getRenaming(), filenames[i]);
+			
+			assertEquals(true, filename.contains(m.getFullName()));
+			
 			i++;
 		}
 		

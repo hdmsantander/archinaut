@@ -14,9 +14,7 @@ import com.opencsv.exceptions.CsvValidationException;
 
 import lombok.extern.slf4j.Slf4j;
 import mx.uam.archinaut.data.loader.MetricsLoader;
-import mx.uam.archinaut.data.nameprocessing.CharacterSubstituteNameProcessor;
 import mx.uam.archinaut.data.nameprocessing.NameProcessor;
-import mx.uam.archinaut.data.nameprocessing.PrefixRemovalNameProcessor;
 import mx.uam.archinaut.model.DesignStructureMatrix;
 import mx.uam.archinaut.model.MatrixElement;
 import mx.uam.archinaut.model.yaml.Metric;
@@ -30,6 +28,8 @@ public class MetricsService {
 	@Autowired
 	private MetricsLoader loader;
 	
+	@Autowired
+	private NameProcessor nameProcessor;
 
 	public boolean saveMetricsReport(DesignStructureMatrix matrix, String fileName) {
 		
@@ -75,10 +75,7 @@ public class MetricsService {
 	}
 	
 	private DesignStructureMatrix loadCsvFileIntoMatrix(YamlConfigurationEntry yamlConfiguration, DesignStructureMatrix matrix) throws IOException, CsvValidationException {
-		
-		NameProcessor processor = new PrefixRemovalNameProcessor(yamlConfiguration.getRenaming().getPrefix());
-		NameProcessor renameProcessor = new CharacterSubstituteNameProcessor('.', '_');
-		
+				
 		// Get the current file loaded into the reader
 		try (CSVReaderHeaderAware reader = new CSVReaderHeaderAware( new InputStreamReader(getClass().getClassLoader().getResourceAsStream(yamlConfiguration.getFile())) ) ) {
 			
@@ -87,9 +84,10 @@ public class MetricsService {
 			while(values != null) {
 				
 				String fileName = values.get(yamlConfiguration.getFilenameMetricName());
-				fileName = processor.processName(fileName);
+				fileName = nameProcessor.processName(yamlConfiguration.getRenaming(), fileName);
 				
-				System.out.println(fileName);
+				log.info("Name to load: " + fileName);
+				log.info("Name is in matrix: " + matrix.hasElementWithName(fileName));
 				
 				// Only proceed with this entry if there's a filename and that filename is in the matrix already
 				if (!StringUtils.isBlank(fileName) && matrix.hasElementWithName(fileName)) {
@@ -98,10 +96,22 @@ public class MetricsService {
 											
 					// For every metric in the configuration file, search for the value in the row and add it
 					for (Metric metric : yamlConfiguration.getMetrics()) {
-						
-						// Create an element metric and add its value to this element
-						ElementMetric elementMetric = new ElementMetric(metric.getRename(), Integer.parseInt(metric.getName()));
-						element.addMetricValue(elementMetric);
+												
+						if (Boolean.FALSE.equals(metric.getFilename())) {
+							
+							// Create an element metric and add its value to this element
+							try {
+								
+								ElementMetric elementMetric = new ElementMetric(metric.getRename(), Integer.parseInt(values.get(metric.getName())));
+								element.addMetricValue(elementMetric);
+								
+							} catch (NumberFormatException e) {
+								
+								log.error("Couldn't load metric " + metric.getName() + " with value: " + values.get(metric.getName()));
+								
+							}
+							
+						}
 									
 					}
 					

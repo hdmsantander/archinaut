@@ -358,7 +358,7 @@ public class DesignStructureMatrixModel {
 	 */
 	public String toString() 
 	{
-		return matrix.getName();
+		return "matrix";
 	}
 	
 	/**

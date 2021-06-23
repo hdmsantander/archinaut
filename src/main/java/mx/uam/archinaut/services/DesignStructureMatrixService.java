@@ -23,13 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 import mx.uam.archinaut.data.loader.DesignStructureMatrixLoader;
 import mx.uam.archinaut.data.loader.YamlLoader;
 import mx.uam.archinaut.data.nameprocessing.NameProcessor;
-import mx.uam.archinaut.data.nameprocessing.PrefixRemovalNameProcessor;
 import mx.uam.archinaut.model.DependencyMetric;
 import mx.uam.archinaut.model.DesignStructureMatrix;
 import mx.uam.archinaut.model.DesignStructureMatrixModel;
 import mx.uam.archinaut.model.MatrixDependencyGroup;
 import mx.uam.archinaut.model.MatrixElement;
 import mx.uam.archinaut.model.MatrixElementGroup;
+import mx.uam.archinaut.model.yaml.RenamingConfiguration;
 import mx.uam.archinaut.model.yaml.YamlConfigurationEntry;
 
 /**
@@ -66,13 +66,11 @@ public class DesignStructureMatrixService {
 	 * @param filename
 	 * @return
 	 */
-	public DesignStructureMatrix loadMatrixFromJSON(String name, String fileName, String elementPrefix, List <String> exclusions) {
-		
-		NameProcessor processor = new PrefixRemovalNameProcessor(elementPrefix);
-		
+	public DesignStructureMatrix loadMatrixFromJSON(String fileName, RenamingConfiguration renamingConfiguration , List <String> exclusions) {
+				
 		DesignStructureMatrix matrix = null;
 		
-		DesignStructureMatrix initialMatrix = loader.loadFromJSON(name, fileName, processor);
+		DesignStructureMatrix initialMatrix = loader.loadFromJSON(fileName, renamingConfiguration);
 		
 		if(initialMatrix == null) {
 			return null;
@@ -128,7 +126,7 @@ public class DesignStructureMatrixService {
 			}
 			
 			
-			matrix = new DesignStructureMatrix(initialMatrix.getName(),initialMatrix.getFileName(),elementsWithoutTests);
+			matrix = new DesignStructureMatrix(initialMatrix.getFileName(),elementsWithoutTests);
 			
 			for(String exclusion:exclusions) {
 				matrix.addExclusionString(exclusion);
@@ -155,7 +153,6 @@ public class DesignStructureMatrixService {
 		}
 			
 		matrix.setMaximumDependencyValue(DependencyMetric.DEPENDENCIES,maxDependencies);
-		matrix.setElementNamesPrefix(elementPrefix);
 		
 		return matrix;
 
@@ -211,7 +208,7 @@ public class DesignStructureMatrixService {
 		}
 		
 		
-		MatrixElementGroup rootElement = new MatrixElementGroup(matrix.getName());
+		MatrixElementGroup rootElement = new MatrixElementGroup("matrix");
 
 		
 		for(MatrixElement e:elements) {
@@ -320,7 +317,7 @@ public class DesignStructureMatrixService {
 		
 		ArrayList <MatrixElement > elementsInMatrix = new ArrayList<MatrixElement> (tempMap.values());
 		
-		DesignStructureMatrix tempMatrix = new DesignStructureMatrix(element.getFullName(),"",elementsInMatrix);
+		DesignStructureMatrix tempMatrix = new DesignStructureMatrix("",elementsInMatrix);
 
 		/*
 		MatrixElementGroup rootElement = new MatrixElementGroup(element.getFullName());
@@ -381,10 +378,8 @@ public class DesignStructureMatrixService {
 	}
 	
 	public DesignStructureMatrix loadMatrixFromJSON(YamlConfigurationEntry dependsConfiguration) {
-				
-		NameProcessor processor = new PrefixRemovalNameProcessor(dependsConfiguration.getRenaming().getPrefix());
 		
-		return loader.loadFromJSON("archinaut", dependsConfiguration.getFile(), processor);
+		return loader.loadFromJSON(dependsConfiguration.getFile(), dependsConfiguration.getRenaming());
 				
 	}
 

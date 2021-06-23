@@ -38,6 +38,8 @@ public class MetricsServiceTest extends AbstractServiceTest  {
 			
 		}
 		
+		metricsService.saveMetricsReport(matrix, "results.csv");
+		
 	}
 
 }
