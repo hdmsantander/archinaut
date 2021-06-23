@@ -1,5 +1,6 @@
 package mx.uam.archinaut.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
@@ -32,14 +33,9 @@ public class MetricsServiceTest extends AbstractServiceTest  {
 		assertNotNull(matrix);
 		
 		for (MatrixElement m : matrix.getElements()) {
-						
-			System.out.println(m.getFullName());
-			System.out.println(m.getMetrics().size());
-			
+			assertEquals(8, m.getMetrics().size());			
 		}
-		
-		metricsService.saveMetricsReport(matrix, "results.csv");
-		
+				
 	}
 
 }
