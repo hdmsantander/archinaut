@@ -1,0 +1,88 @@
+---
+file: 'scc.csv'
+format: 'CSV'
+renaming:
+  pathSeparator: '/'
+  prefix: 'src/main/java/'
+  suffix: ''
+  substitutions:
+    - order: 1
+      substitute: '.'
+      with: '_'
+    - order: 2
+      substitute: '/'
+      with: '_'
+metrics:
+  - name: 'Location'
+    filename: true
+  - name: 'Lines'
+    rename: 'SCC_LOC'
+  - name: 'Code'
+    rename: 'SCC_CLOC'
+  - name: 'Complexity'
+    rename: 'SCC_COMPLEXITY'
+---
+file: 'frecuencies.csv'
+format: 'CSV'
+renaming:
+  pathSeparator: '/'
+  prefix: 'src/main/java/'
+  suffix: ''
+  substitutions:
+    - order: 1
+      substitute: '.'
+      with: '_'
+    - order: 2
+      substitute: '/'
+      with: '_'
+metrics:
+  - name: 'entity'
+    filename: true
+  - name: 'n-revs'
+    rename: 'ARCH_REVISIONS'
+  - name: 'bugs'
+    rename: 'BUG_COMMITS'
+  - name: 'added'
+    rename: 'LINES_ADDED'
+  - name: 'removed'
+    rename: 'LINES_REMOVED'
+---
+file: 'coupling.csv'
+format: 'CSV'
+renaming:
+  pathSeparator: '/'
+  prefix: 'src/main/java/'
+  suffix: ''
+  substitutions:
+    - order: 1
+      substitute: '.'
+      with: '_'
+    - order: 2
+      substitute: '/'
+      with: '_'
+metrics:
+  - name: 'entity'
+    filename: true
+  - name: 'cochanges'
+    rename: 'COCHANGES'
+---
+file: 'depends.json'
+format: 'DEPENDS'
+renaming:
+  pathSeparator: '.'
+  prefix: 'main.java.'
+  suffix: ''
+  substitutions:
+    - order: 1
+      substitute: '.'
+      with: '_'
+metrics:
+  - name: 'Call'
+  - name: 'Import'
+  - name: 'Return'
+  - name: 'Use'
+  - name: 'Parameter'
+  - name: 'Contain'
+  - name: 'Implement'
+  - name: 'Create'
+  - name: 'Extend'

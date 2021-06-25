@@ -125,12 +125,9 @@ class YamlLoaderTest {
 				assertEquals("entity", y.getMetrics().get(0).getName());
 				assertEquals(true, y.getMetrics().get(0).getFilename());
 				
-				assertEquals("coupled", y.getMetrics().get(1).getName());
-				assertEquals("COUPLED", y.getMetrics().get(1).getRename());
-				
-				assertEquals("cochanges", y.getMetrics().get(2).getName());
-				assertEquals("COCHANGES", y.getMetrics().get(2).getRename());
-								
+				assertEquals("cochanges", y.getMetrics().get(1).getName());
+				assertEquals("COCHANGES", y.getMetrics().get(1).getRename());
+												
 			}
 			
 		}

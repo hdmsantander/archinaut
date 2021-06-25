@@ -165,10 +165,10 @@ $RECYCLE.BIN/
 
 ### Ignore our testing dir ###
 AnalysisDSMViewer
-archinaut.csv
-archinaut.xml
-configuration.yml
-coupling.csv
-depends.json
-frecuencies.csv
-scc.csv
+./archinaut.csv
+./archinaut.xml
+./configuration.yml
+./coupling.csv
+./depends.json
+./frecuencies.csv
+./scc.csv
