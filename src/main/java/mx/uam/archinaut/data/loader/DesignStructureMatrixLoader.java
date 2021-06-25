@@ -21,11 +21,15 @@ SOFTWARE.
 */
 package mx.uam.archinaut.data.loader;
 
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.stream.JsonReader;
@@ -36,6 +40,7 @@ import mx.uam.archinaut.data.nameprocessing.NameProcessor;
 import mx.uam.archinaut.model.DesignStructureMatrix;
 import mx.uam.archinaut.model.MatrixDependencyGroup;
 import mx.uam.archinaut.model.MatrixElement;
+import mx.uam.archinaut.model.yaml.RenamingConfiguration;
 
 /**
  * 
@@ -48,109 +53,112 @@ import mx.uam.archinaut.model.MatrixElement;
 @Slf4j
 @Component
 public class DesignStructureMatrixLoader {
-		
+
+	@Autowired
+	private NameProcessor nameProcessor;
+
 	/**
-	 * This method loads a file produced by depends using the following option
-	 * java -jar depends.jar -s -p dot -d outputData java originalData/myproject/src dependency
-	 * and returns a DesignStructureMatrix
+	 * This method loads a file produced by depends using the following option java
+	 * -jar depends.jar -s -p dot -d outputData java originalData/myproject/src
+	 * dependency and returns a DesignStructureMatrix
 	 * 
 	 * @param filename the path of the file
 	 * @return a DesignStructureMatrix
 	 */
-	public DesignStructureMatrix loadFromJSON (String name, String filename, NameProcessor processor) {
-		
-		ArrayList <MatrixElement> elements = new ArrayList<>();
-		
-        try  {
-        	
-    		log.info("Loading JSON depends output from: ",filename);
-        	
-        	Reader reader = new FileReader(filename);
-        	
-            // Convert JSON File to Java Object			
-        	JsonReader jsonReader = new JsonReader(reader);
-        	
-            jsonReader.beginObject();
-            
-            // consume "schemaVersion" : "1.0" 
-            jsonReader.nextName();
-            jsonReader.nextString();
+	public DesignStructureMatrix loadFromJSON(String filename, RenamingConfiguration renamingConfiguration) {
 
-            // consume "name" : "dependency-sdsm" 
-            jsonReader.nextName();
-            jsonReader.nextString();
+		List<MatrixElement> elements = new ArrayList<>();
 
-            jsonReader.nextName(); // consume "variables"
-            jsonReader.beginArray();
+		try {
 
-            // filenames
-            JsonToken token = jsonReader.peek();
+			log.info("Loading JSON depends output from: ", filename);
 
-            while(token!=JsonToken.END_ARRAY) {
-                String value = jsonReader.nextString();
-                value = processor.processName(value);
-                
-                elements.add(new MatrixElement(value)); // consume file name
-                token = jsonReader.peek();
-            }                     
-            
-            jsonReader.endArray();
-            
-            jsonReader.nextName(); // consume "cells"
-            
-            jsonReader.beginArray();
+			InputStream is = new FileInputStream(filename);
 
-            token = jsonReader.peek();
-            
-            while(token!=JsonToken.END_ARRAY) {
-            	jsonReader.beginObject();
-            	
-                jsonReader.nextName(); // consume "src"
-                int row = jsonReader.nextInt();
+			Reader reader = new InputStreamReader(is);
 
-                jsonReader.nextName(); // consume "dest"
-                int column = jsonReader.nextInt();
+			// Convert JSON File to Java Object
+			JsonReader jsonReader = new JsonReader(reader);
 
-                jsonReader.nextName(); // consume "values"
-            	jsonReader.beginObject();
+			jsonReader.beginObject();
 
-    			MatrixElement source = elements.get(row);
-    			MatrixElement destination = elements.get(column);
-    			MatrixDependencyGroup dependencies = new MatrixDependencyGroup(source,destination);
-            	source.addDependency(dependencies);
-            	
-            	while(token!=JsonToken.END_OBJECT) {
-            		            		
-                    String dependencyType = jsonReader.nextName(); // consume dependency type
-                    int intValue = jsonReader.nextInt(); // consume value
+			// consume "schemaVersion" : "1.0"
+			jsonReader.nextName();
+			jsonReader.nextString();
 
-                    dependencies.addDependency(dependencyType, intValue);
-                                	
-            		token = jsonReader.peek();
-            	}
-            	
-            	jsonReader.endObject();
+			// consume "name" : "dependency-sdsm"
+			jsonReader.nextName();
+			jsonReader.nextString();
 
-            	jsonReader.endObject();
-            	token = jsonReader.peek();
-            }
-            
-            jsonReader.endArray();
-            jsonReader.endObject();
-            
-            jsonReader.close();
+			jsonReader.nextName(); // consume "variables"
+			jsonReader.beginArray();
 
-            
-        } catch (IOException ex) {
-        	
-            log.error("DesignStructureMatrixLoader.loadFromJSON: ",ex);
-            return null;
-        }
-        
-        DesignStructureMatrix matrix = new DesignStructureMatrix(name, filename, elements);
-        
-        return matrix;        
+			// filenames
+			JsonToken token = jsonReader.peek();
+
+			while (token != JsonToken.END_ARRAY) {
+				String value = jsonReader.nextString();
+				value = nameProcessor.processName(renamingConfiguration, value);
+
+				elements.add(new MatrixElement(value)); // consume file name
+				token = jsonReader.peek();
+			}
+
+			jsonReader.endArray();
+
+			jsonReader.nextName(); // consume "cells"
+
+			jsonReader.beginArray();
+
+			token = jsonReader.peek();
+
+			while (token != JsonToken.END_ARRAY) {
+				jsonReader.beginObject();
+
+				jsonReader.nextName(); // consume "src"
+				int row = jsonReader.nextInt();
+
+				jsonReader.nextName(); // consume "dest"
+				int column = jsonReader.nextInt();
+
+				jsonReader.nextName(); // consume "values"
+				jsonReader.beginObject();
+
+				MatrixElement source = elements.get(row);
+				MatrixElement destination = elements.get(column);
+				MatrixDependencyGroup dependencies = new MatrixDependencyGroup(source, destination);
+				source.addDependency(dependencies);
+
+				while (token != JsonToken.END_OBJECT) {
+
+					String dependencyType = jsonReader.nextName(); // consume dependency type
+					int intValue = jsonReader.nextInt(); // consume value
+
+					dependencies.addDependency(dependencyType, intValue);
+
+					token = jsonReader.peek();
+				}
+
+				jsonReader.endObject();
+
+				jsonReader.endObject();
+				token = jsonReader.peek();
+			}
+
+			jsonReader.endArray();
+			jsonReader.endObject();
+
+			jsonReader.close();
+
+		} catch (IOException ex) {
+
+			log.error("DesignStructureMatrixLoader.loadFromJSON: ", ex);
+			return null;
+		}
+
+		DesignStructureMatrix matrix = new DesignStructureMatrix(filename, elements);
+
+		return matrix;
 	}
 
-	
 }

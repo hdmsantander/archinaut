@@ -3,17 +3,17 @@ package mx.uam.archinaut.model;
 public class DependencyConstraint {
 	// number that identifies the source of the dependency
 	private MatrixElement source;
-	
+
 	// number that identifies the destination of the dependency
 	private MatrixElement destination;
 
 	/**
 	 * Create a contraint.
 	 * 
-	 * Note: Constraints cannot be connected to dependency groups because the groups 
-	 * are created and destroyed as different DesignStructureMatrixModels are created
-	 * only dependency groups between leaf elements remain. For this reason, constraints
-	 * are added directly to the matrix.
+	 * Note: Constraints cannot be connected to dependency groups because the groups
+	 * are created and destroyed as different DesignStructureMatrixModels are
+	 * created only dependency groups between leaf elements remain. For this reason,
+	 * constraints are added directly to the matrix.
 	 * 
 	 * @param source
 	 * @param destination
@@ -22,7 +22,7 @@ public class DependencyConstraint {
 		this.source = source;
 		this.destination = destination;
 	}
-	
+
 	/**
 	 * Returns the index of the source of the dependency
 	 * 
@@ -40,14 +40,13 @@ public class DependencyConstraint {
 	public MatrixElement getDestination() {
 		return destination;
 	}
-	
+
 	/**
 	 * 
 	 */
 	@Override
 	public String toString() {
-		return "Constraint between source: "+source+" and destination: "+destination;
+		return "Constraint between source: " + source + " and destination: " + destination;
 	}
-
 
 }
