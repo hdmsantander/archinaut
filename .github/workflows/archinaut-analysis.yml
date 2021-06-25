@@ -18,7 +18,22 @@ jobs:
         id: archinaut
         uses: hdmsantander/archinaut-action@main
         with:
+          configuration file: archinaut.yml
+          init date: '2020-03-07'
           min cochanges: 0
+          scc cloc: 100
+          scc complexity: 15
+          scc loc: 150
+      
+      # Run Archinaut companion action to upload
+      - name: Archinaut companion
+        id: archinaut-companion
+        uses: hdmsantander/archinaut-companion-action@main
+        with:
+          results: ${{ env.workspace }} archinaut.csv
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_E }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_E }}
+          REGION: us-east-1
 
       # Store the Archinaut artifact
       - name: Upload CSV as artifact
