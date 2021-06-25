@@ -18,7 +18,12 @@ jobs:
         id: archinaut
         uses: hdmsantander/archinaut-action@main
         with:
+          configuration file: archinaut.yml
+          init date: '2020-03-07'
           min cochanges: 0
+          scc cloc: 100
+          scc complexity: 15
+          scc loc: 150
 
       # Store the Archinaut artifact
       - name: Upload CSV as artifact
