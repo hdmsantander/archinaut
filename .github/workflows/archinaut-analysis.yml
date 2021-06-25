@@ -41,3 +41,10 @@ jobs:
         with:
           name: archinaut
           path: archinaut.csv
+          
+      # Store the Archinaut artifact
+      - name: Upload XML as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: archinaut-junit
+          path: archinaut.xml
