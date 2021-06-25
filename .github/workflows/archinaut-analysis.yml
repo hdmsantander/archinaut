@@ -34,15 +34,25 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_E }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_E }}
           REGION: us-east-1
+          
+      # Analyze JUnit threshold report
+      - name: Generate report using Archinaut XML output
+        uses: EnricoMi/publish-unit-test-result-action@v1.7
+        if: always()
+        with:
+         check_name: 'Archinaut analysis results'
+         report_individual_runs: true
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         files: archinaut.xml
 
-      # Store the Archinaut artifact
+      # Store the Archinaut results artifact
       - name: Upload CSV as artifact
         uses: actions/upload-artifact@v2
         with:
           name: archinaut
           path: archinaut.csv
           
-      # Store the Archinaut artifact
+      # Store the Archinaut JUnit artifact
       - name: Upload XML as artifact
         uses: actions/upload-artifact@v2
         with:
