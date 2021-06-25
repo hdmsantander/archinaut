@@ -104,8 +104,10 @@ public class MetricsService {
 
 							// Create an element metric and add its value to this element
 							try {
+								
+								String nameToSave = metric.getRename().isBlank() ? metric.getName() : metric.getRename();
 
-								ElementMetric elementMetric = new ElementMetric(metric.getRename(),
+								ElementMetric elementMetric = new ElementMetric(nameToSave,
 										Integer.parseInt(values.get(metric.getName())));
 								element.addMetricValue(elementMetric);
 
