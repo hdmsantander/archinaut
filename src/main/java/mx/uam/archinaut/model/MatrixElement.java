@@ -1,7 +1,6 @@
 package mx.uam.archinaut.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,8 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * An element of the design structure matrix which is a source of dependencies
@@ -19,10 +17,8 @@ import org.slf4j.LoggerFactory;
  * @author humbertocervantes
  *
  */
+@Slf4j
 public class MatrixElement implements Comparable<MatrixElement> {
-
-	// The logger
-	private static final Logger logger = LoggerFactory.getLogger(MatrixElement.class);
 
 	// Full name of the element
 	private String fullName;
@@ -237,7 +233,7 @@ public class MatrixElement implements Comparable<MatrixElement> {
 	public boolean addDependency(MatrixDependencyGroup dependency) {
 
 		if (dependency.getSource() != this) {
-			logger.error("MatrixElement.addDependency: adding a dependency group whose source is not this element");
+			log.error("MatrixElement.addDependency: adding a dependency group whose source is not this element");
 			return false;
 		}
 
@@ -253,7 +249,7 @@ public class MatrixElement implements Comparable<MatrixElement> {
 	public boolean removeDependency(MatrixDependencyGroup dependency) {
 
 		if (dependency.getSource() != this) {
-			logger.error("MatrixElement.addDependency: removing a dependency group whose source is not this element");
+			log.error("MatrixElement.addDependency: removing a dependency group whose source is not this element");
 			return false;
 		}
 
@@ -351,7 +347,7 @@ public class MatrixElement implements Comparable<MatrixElement> {
 	 * @return
 	 */
 	public boolean addConstraint(ElementConstraint constraint) {
-		logger.info("Added constraint" + constraint);
+		log.info("Added constraint" + constraint);
 		return constraints.add(constraint);
 	}
 
@@ -361,7 +357,7 @@ public class MatrixElement implements Comparable<MatrixElement> {
 	 * @return
 	 */
 	public boolean removeConstraint(ElementConstraint constraint) {
-		logger.info("Removed constraint" + constraint);
+		log.info("Removed constraint" + constraint);
 		return constraints.remove(constraint);
 	}
 

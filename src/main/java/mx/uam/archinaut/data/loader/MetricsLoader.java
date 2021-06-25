@@ -2,18 +2,10 @@ package mx.uam.archinaut.data.loader;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Component;
 
-import com.opencsv.CSVReaderHeaderAware;
-
 import lombok.extern.slf4j.Slf4j;
-import mx.uam.archinaut.data.nameprocessing.NameProcessor;
 
 @Slf4j
 @Component
