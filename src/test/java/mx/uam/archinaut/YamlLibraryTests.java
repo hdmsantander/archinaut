@@ -22,7 +22,7 @@ class YamlLibraryTests {
 
 		Yaml yamlMultiple = new Yaml(new Constructor(YamlConfigurationEntry.class));
 
-		InputStream is2 = getClass().getClassLoader().getResourceAsStream("configuration.yml");
+		InputStream is2 = getClass().getClassLoader().getResourceAsStream("archinaut.yml");
 
 		List<YamlConfigurationEntry> entries = new ArrayList<>();
 

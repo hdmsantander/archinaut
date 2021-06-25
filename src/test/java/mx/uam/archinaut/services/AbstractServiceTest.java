@@ -21,8 +21,8 @@ public class AbstractServiceTest {
 	@BeforeEach
 	public void prepare() throws FileNotFoundException {
 		
-		dependsConfigurationEntry = yamlLoader.getDependsConfigurationEntry("configuration.yml");
-		nonDependsConfigurationEntries = yamlLoader.getNonDependsConfigurationEntries("configuration.yml");
+		dependsConfigurationEntry = yamlLoader.getDependsConfigurationEntry("archinaut.yml");
+		nonDependsConfigurationEntries = yamlLoader.getNonDependsConfigurationEntries("archinaut.yml");
 		
 	}
 

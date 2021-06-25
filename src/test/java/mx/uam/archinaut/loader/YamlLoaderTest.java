@@ -21,7 +21,7 @@ class YamlLoaderTest {
 	@Test
 	void testDependsConfigurationEntry() throws FileNotFoundException {
 		
-		YamlConfigurationEntry entry = yamlLoader.getDependsConfigurationEntry("configuration.yml");
+		YamlConfigurationEntry entry = yamlLoader.getDependsConfigurationEntry("archinaut.yml");
 		
 		assertEquals("DEPENDS", entry.getFormat());
 		assertEquals("depends.json", entry.getFile());
@@ -49,7 +49,7 @@ class YamlLoaderTest {
 	@Test
 	void testNonDependsConfigurationEntries() throws FileNotFoundException {
 		
-		List<YamlConfigurationEntry> entries = yamlLoader.getNonDependsConfigurationEntries("configuration.yml");
+		List<YamlConfigurationEntry> entries = yamlLoader.getNonDependsConfigurationEntries("archinaut.yml");
 		
 		assertEquals(3, entries.size());
 		
