@@ -7,7 +7,7 @@ name: Publish package to GitHub Packages
 # This workflow is triggered upon the creation of a new release
 on:
   release:
-    types: [created]
+    types: [created,edited]
 
 # The jobs on this workflow
 jobs:
