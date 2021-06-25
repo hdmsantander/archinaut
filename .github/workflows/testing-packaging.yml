@@ -1,0 +1,90 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+# This is the name of the workflow
+name: Java application packaging with Maven
+
+# This specifies what actions on the repository trigger this workflow
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# These are the jobs to do in this workflow
+jobs:
+  testing:
+    
+    # Runs on the runner ubuntu-latest
+    # For more info: https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners
+    runs-on: ubuntu-latest
+    
+    # These are the steps to take in this job
+    steps:
+    
+    # Dowload a copy of this repository to the runner
+    - name: Checkout the repository into the runner
+      uses: actions/checkout@v2
+
+    # Setup the JDK 11 for x64
+    - name: Set up JDK 11 for a x64 architecture
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+        architecture: x64
+
+    # Cache the packages used by Maven to save time in future runs
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    # Test the application using Maven
+    - name: Test application with Maven
+      run: mvn -B test --file pom.xml
+
+  # This job compiles and packages a Java application using Maven
+  packaging:
+    
+    # In order to package we need a sucessful test first, this explicit dependency is needed because otherwise
+    # jobs run in paralel
+    needs: [testing]
+    
+    # Runs on the runner ubuntu-latest
+    # For more info: https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners
+    runs-on: ubuntu-latest
+    
+    # These are the steps to take in this job
+    steps:
+    
+    # Dowload a copy of this repository to the runner
+    - name: Checkout the repository into the runner
+      uses: actions/checkout@v2
+    
+    # Setup the JDK 11 for x64
+    - name: Set up JDK 11 for a x64 architecture
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+        architecture: x64
+    
+    # Cache the packages used by Maven to save time in future runs
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    
+    # Build the application using Maven
+    - name: Build application with Maven
+      run: mvn -B package --file pom.xml
+    
+    # Store the packaged jar as an artifact
+    - name: Archive packaged jar as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: jar
+        path: target/*.jar
