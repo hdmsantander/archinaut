@@ -39,7 +39,7 @@ public class TrendsAnalysisLoader {
 
 	public boolean saveToJSON(String filename, TrendsAnalysisDTO trendsAnalysisDTO) {
 
-		try(Writer writer = new FileWriter(filename)) {
+		try (Writer writer = new FileWriter(filename)) {
 
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			gson.toJson(trendsAnalysisDTO, writer);
@@ -56,7 +56,7 @@ public class TrendsAnalysisLoader {
 	public boolean saveReport(String foldername, String filename, StringBuilder report) {
 
 		File file = new File(foldername + System.lineSeparator() + filename);
-		
+
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 			writer.write(report.toString());
 		} catch (Exception ex) {

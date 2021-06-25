@@ -14,7 +14,8 @@ public class NameProcessor {
 
 	public String processName(RenamingConfiguration renamingConfiguration, String nameToProcess) {
 
-		String result = nameToProcess.replace(renamingConfiguration.getPrefix(), "");
+		String result = nameToProcess.replace(renamingConfiguration.getPrefix(), "")
+				.replace(renamingConfiguration.getSuffix(), "");
 
 		List<Substitution> substutions = renamingConfiguration.getSubstitutions();
 		Collections.sort(substutions);
