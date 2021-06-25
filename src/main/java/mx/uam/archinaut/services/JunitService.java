@@ -11,7 +11,6 @@ import javax.xml.bind.Marshaller;
 import org.springframework.stereotype.Service;
 
 import mx.uam.archinaut.model.DesignStructureMatrix;
-import mx.uam.archinaut.model.ElementMetric;
 import mx.uam.archinaut.model.MatrixElement;
 import mx.uam.archinaut.model.xsd.ObjectFactory;
 import mx.uam.archinaut.model.xsd.Testsuite.Testcase;

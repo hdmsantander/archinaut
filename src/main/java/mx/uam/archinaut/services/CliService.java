@@ -17,7 +17,6 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
-import mx.uam.archinaut.data.loader.YamlLoader;
 import mx.uam.archinaut.model.DesignStructureMatrix;
 
 @Component
