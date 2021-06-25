@@ -19,90 +19,84 @@ import org.slf4j.LoggerFactory;
  * @author humbertocervantes
  *
  */
-public class MatrixElement implements Comparable <MatrixElement> {
-	
+public class MatrixElement implements Comparable<MatrixElement> {
+
 	// The logger
 	private static final Logger logger = LoggerFactory.getLogger(MatrixElement.class);
-	
+
 	// Full name of the element
 	private String fullName;
-	
+
 	// Short name if it is in a cluster
 	private String name;
-	
+
 	// Dependencies for which this element is source
-	private Set <MatrixDependencyGroup> dependencies = new HashSet <>();
-			
+	private Set<MatrixDependencyGroup> dependencies = new HashSet<>();
+
 	// The group this belongs to (in case it does)
 	private MatrixElementGroup group;
-	
+
 	// Methods of the element
-	private List <ElementMethod> methods = new ArrayList <>();
+	private List<ElementMethod> methods = new ArrayList<>();
 
 	// Names of design smells associated with this element
-	private Set <String> designSmells;
+	private Set<String> designSmells;
 
 	// Mark as hotspot
 	private boolean hotspot = false;
-	
+
 	// Element constraints
-	private List <ElementConstraint> constraints = new ArrayList <> ();
-	
+	private List<ElementConstraint> constraints = new ArrayList<>();
+
 	// Element metrics
 	private Map<String, Integer> metrics = new HashMap<>();
-	
-	private Set <HotspotData> hotspotData;
-	
+
+	private Set<HotspotData> hotspotData;
+
 	public enum ElementStatus {
-		NEW,
-		PRESENT,
-		RENAMED,
-		NOTPRESENT,
-		DELETED
+		NEW, PRESENT, RENAMED, NOTPRESENT, DELETED
 	}
 
 	public class HotspotData {
 		ElementMetric metric;
 		int deviationTimes;
 		double deviationIndex;
-		
+
 		public HotspotData(ElementMetric metric, int deviationTimes, double deviationIndex) {
 			this.metric = metric;
 			this.deviationTimes = deviationTimes;
 			this.deviationIndex = deviationIndex;
 		}
-		
+
 		public void setDeviationTimes(int deviationTimes) {
 			this.deviationTimes = deviationTimes;
-			
+
 		}
-		
+
 		public void setDeviationIndex(double deviationIndex) {
 			this.deviationIndex = deviationIndex;
 		}
-		
+
 		public ElementMetric getMetric() {
 			return metric;
 		}
-		
+
 		public int getDeviationTimes() {
 			return deviationTimes;
 		}
-		
+
 		public double getDeviationIndex() {
 			return deviationIndex;
 		}
 	}
 
-	
-	
 	/**
 	 * Constructor
 	 * 
 	 * @param name the name of the element
 	 */
 	public MatrixElement(String name) {
-		this.name = name;	
+		this.name = name;
 		this.fullName = name;
 	}
 
@@ -115,7 +109,6 @@ public class MatrixElement implements Comparable <MatrixElement> {
 		return name;
 	}
 
-	
 	/**
 	 * 
 	 * Setter to change the name of the element
@@ -128,7 +121,6 @@ public class MatrixElement implements Comparable <MatrixElement> {
 		return true;
 	}
 
-	
 	/**
 	 * Get the name of the element
 	 * 
@@ -137,7 +129,7 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	public String getFullName() {
 		return fullName;
 	}
-	
+
 	/**
 	 * 
 	 * @param type
@@ -145,14 +137,15 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	 * @return
 	 */
 	public boolean addMetricValue(ElementMetric metric) {
-		
-		// If there's already a metric with that name for this element add the values together, else put the value as is
+
+		// If there's already a metric with that name for this element add the values
+		// together, else put the value as is
 		if (metrics.containsKey(metric.getName())) {
 			metrics.put(metric.getName(), metrics.get(metric.getName()) + metric.getValue());
 		} else {
 			metrics.put(metric.getName(), metric.getValue());
 		}
-		
+
 		return true;
 	}
 
@@ -164,7 +157,7 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	public int getMetricValue(ElementMetric metric) {
 		return metrics.get(metric.getName());
 	}
-	
+
 	public int getMetricValue(String metric) {
 		return metrics.get(metric);
 	}
@@ -177,8 +170,7 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	public Map<String, Integer> getMetrics() {
 		return metrics;
 	}
-	
-	
+
 	/**
 	 * Mark this element as a hotspot
 	 * 
@@ -188,54 +180,54 @@ public class MatrixElement implements Comparable <MatrixElement> {
 		hotspot = value;
 		return value;
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	public boolean isHotspot() {
-		
+
 		// Groups cannot be marked as hotspots
-		if(this instanceof MatrixElementGroup) {
+		if (this instanceof MatrixElementGroup) {
 			return false;
 		}
 
 		return hotspot;
 	}
-	
-	public void setHotspotData(Set <HotspotData> hotspotData) {
+
+	public void setHotspotData(Set<HotspotData> hotspotData) {
 		this.hotspotData = hotspotData;
 	}
-	
+
 	public HotspotData getHotspotData(ElementMetric metric) {
-		if(!hotspot) {
+		if (!hotspot) {
 			return null;
 		}
-		
-		if(hotspotData != null) {
-			for(HotspotData data:hotspotData) {
-				if(data.metric == metric) {
+
+		if (hotspotData != null) {
+			for (HotspotData data : hotspotData) {
+				if (data.metric == metric) {
 					return data;
 				}
 			}
 		}
-		
+
 		return null;
-		
+
 	}
-		
+
 	public double getHotspotIndex() {
 		double hotspotIndex = 0.0;
-		
-		if(hotspotData != null) {
-			for(HotspotData data:hotspotData) {
+
+		if (hotspotData != null) {
+			for (HotspotData data : hotspotData) {
 				hotspotIndex += data.getDeviationIndex();
 			}
 		}
-		
+
 		return hotspotIndex;
 	}
-	
+
 	/**
 	 * Add a dependency for this element
 	 * 
@@ -243,15 +235,15 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	 * @return true if added successfully, false if this element is not the source
 	 */
 	public boolean addDependency(MatrixDependencyGroup dependency) {
-		
-		if(dependency.getSource() != this) {
+
+		if (dependency.getSource() != this) {
 			logger.error("MatrixElement.addDependency: adding a dependency group whose source is not this element");
 			return false;
 		}
-		
+
 		return dependencies.add(dependency);
 	}
-	
+
 	/**
 	 * Remove a dependency for this element
 	 * 
@@ -259,28 +251,27 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	 * @return true if added successfully, false if this element is not the source
 	 */
 	public boolean removeDependency(MatrixDependencyGroup dependency) {
-		
-		if(dependency.getSource() != this) {
+
+		if (dependency.getSource() != this) {
 			logger.error("MatrixElement.addDependency: removing a dependency group whose source is not this element");
 			return false;
 		}
-		
+
 		return dependencies.remove(dependency);
 	}
 
-	
 	/**
 	 * Retrieve this element's dependencies
 	 * 
 	 * @return an arraylist with the dependencies
 	 */
-	public Iterable <MatrixDependencyGroup> getDependencies() {
+	public Iterable<MatrixDependencyGroup> getDependencies() {
 		return dependencies;
 	}
 
 	/**
-	 * Sets the group of the element. This is normally called by DesignStructureMatrixElementGroup when
-	 * the element is added to a group.
+	 * Sets the group of the element. This is normally called by
+	 * DesignStructureMatrixElementGroup when the element is added to a group.
 	 * 
 	 * @param group
 	 */
@@ -288,7 +279,7 @@ public class MatrixElement implements Comparable <MatrixElement> {
 		this.group = group;
 		return true;
 	}
-	
+
 	/**
 	 * Get the group this element belongs to
 	 * 
@@ -297,11 +288,11 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	public MatrixElementGroup getGroup() {
 		return group;
 	}
-	
+
 	public String toString() {
 		return getName();
 	}
-		
+
 	/**
 	 * 
 	 * @return
@@ -316,15 +307,15 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	 */
 	public void addMethod(ElementMethod method) {
 		methods.add(method);
-		
+
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
-	public Iterable <ElementMethod> getMethods() {
-		Collections.sort(methods,Collections.reverseOrder());
+	public Iterable<ElementMethod> getMethods() {
+		Collections.sort(methods, Collections.reverseOrder());
 		return methods;
 	}
 
@@ -336,16 +327,16 @@ public class MatrixElement implements Comparable <MatrixElement> {
 		return methods.size();
 
 	}
-	
+
 	/**
 	 * 
 	 * @param index
 	 * @return
 	 */
-	public ElementMethod getMethod(int index) {		
+	public ElementMethod getMethod(int index) {
 		return methods.get(index);
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -353,53 +344,52 @@ public class MatrixElement implements Comparable <MatrixElement> {
 	public boolean isGroup() {
 		return false;
 	}
-	
+
 	/**
 	 * 
 	 * @param constraint
 	 * @return
 	 */
 	public boolean addConstraint(ElementConstraint constraint) {
-		logger.info("Added constraint"+constraint);
+		logger.info("Added constraint" + constraint);
 		return constraints.add(constraint);
 	}
-	
+
 	/**
 	 * 
 	 * @param constraint
 	 * @return
 	 */
 	public boolean removeConstraint(ElementConstraint constraint) {
-		logger.info("Removed constraint"+constraint);
+		logger.info("Removed constraint" + constraint);
 		return constraints.remove(constraint);
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
-	public Iterable <ElementConstraint> getConstraints() {
+	public Iterable<ElementConstraint> getConstraints() {
 		return constraints;
 	}
-	
+
 	/**
 	 * Get a string with the element details
 	 * 
 	 * @return
 	 */
 	public String getDetails() {
-		
-		StringBuilder message = new StringBuilder ("Element: "+getFullName());
-		
+
+		StringBuilder message = new StringBuilder("Element: " + getFullName());
+
 		for (Entry<String, Integer> e : metrics.entrySet()) {
-			message.append("\n"+e.getKey()+": "+e.getValue());
+			message.append("\n" + e.getKey() + ": " + e.getValue());
 		}
-				
+
 		return message.toString();
 
 	}
 
-	
 	/**
 	 * Method to support comparisons for sorting in Table
 	 */
@@ -413,5 +403,5 @@ public class MatrixElement implements Comparable <MatrixElement> {
 		MatrixElement compared = (MatrixElement) target;
 		return (this.fullName.equals(compared.fullName));
 	}
-	
+
 }

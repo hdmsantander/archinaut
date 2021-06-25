@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
-
 /**
  * 
  * @author humbertocervantes
@@ -22,44 +21,41 @@ import com.google.gson.Gson;
  */
 @Component
 public class ConstraintsLoader {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ConstraintsLoader.class);
-	
-	
+
 	public MatrixConstraintsDTO loadFromJSON(String filename) {
-		
-        try  {
 
-        	// MatrixConstraintsDTO summary = new Gson().fromJson(br, MatrixConstraintsDTO.class);
-        	Reader reader = new FileReader(filename);
-        	MatrixConstraintsDTO matrixConstraintsDTO = new Gson().fromJson(reader, MatrixConstraintsDTO.class); 
-  	      	reader.close();
-  	      	return matrixConstraintsDTO;
+		try {
 
+			// MatrixConstraintsDTO summary = new Gson().fromJson(br,
+			// MatrixConstraintsDTO.class);
+			Reader reader = new FileReader(filename);
+			MatrixConstraintsDTO matrixConstraintsDTO = new Gson().fromJson(reader, MatrixConstraintsDTO.class);
+			reader.close();
+			return matrixConstraintsDTO;
 
-        } catch (IOException ex) {
-            logger.error("ConstraintsLoader.saveToJSON:",ex);
-            return null;
-        }
-        
+		} catch (IOException ex) {
+			logger.error("ConstraintsLoader.saveToJSON:", ex);
+			return null;
+		}
+
 	}
 
-	
 	public boolean saveToJSON(String filename, MatrixConstraintsDTO matrixConstraintsDTO) {
-		
-        try  {
 
-        	Writer writer = new FileWriter(filename);
-  	      	new Gson().toJson(matrixConstraintsDTO, writer); 
-  	      	writer.flush();
-  	      	writer.close();
+		try {
 
+			Writer writer = new FileWriter(filename);
+			new Gson().toJson(matrixConstraintsDTO, writer);
+			writer.flush();
+			writer.close();
 
-        } catch (IOException ex) {
-            logger.error("ConstraintsLoader.saveToJSON:",ex);
-            return false;
-        }
-        
+		} catch (IOException ex) {
+			logger.error("ConstraintsLoader.saveToJSON:", ex);
+			return false;
+		}
+
 		return true;
 	}
 }

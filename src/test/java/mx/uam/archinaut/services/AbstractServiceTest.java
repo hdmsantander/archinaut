@@ -1,5 +1,6 @@
 package mx.uam.archinaut.services;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +19,10 @@ public class AbstractServiceTest {
 	protected List<YamlConfigurationEntry> nonDependsConfigurationEntries;
 	
 	@BeforeEach
-	public void prepare() {
+	public void prepare() throws FileNotFoundException {
 		
-		dependsConfigurationEntry = yamlLoader.getDependsConfigurationEntry();
-		nonDependsConfigurationEntries = yamlLoader.getNonDependsConfigurationEntries();
+		dependsConfigurationEntry = yamlLoader.getDependsConfigurationEntry("configuration.yml");
+		nonDependsConfigurationEntries = yamlLoader.getNonDependsConfigurationEntries("configuration.yml");
 		
 	}
 

@@ -2,6 +2,7 @@ package mx.uam.archinaut.loader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -18,9 +19,9 @@ class YamlLoaderTest {
 	private YamlLoader yamlLoader;
 
 	@Test
-	void testDependsConfigurationEntry() {
+	void testDependsConfigurationEntry() throws FileNotFoundException {
 		
-		YamlConfigurationEntry entry = yamlLoader.getDependsConfigurationEntry();
+		YamlConfigurationEntry entry = yamlLoader.getDependsConfigurationEntry("configuration.yml");
 		
 		assertEquals("DEPENDS", entry.getFormat());
 		assertEquals("depends.json", entry.getFile());
@@ -46,9 +47,9 @@ class YamlLoaderTest {
 	}
 	
 	@Test
-	void testNonDependsConfigurationEntries() {
+	void testNonDependsConfigurationEntries() throws FileNotFoundException {
 		
-		List<YamlConfigurationEntry> entries = yamlLoader.getNonDependsConfigurationEntries();
+		List<YamlConfigurationEntry> entries = yamlLoader.getNonDependsConfigurationEntries("configuration.yml");
 		
 		assertEquals(3, entries.size());
 		

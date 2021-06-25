@@ -13,17 +13,17 @@ public class YamlConfigurationEntry {
 	private RenamingConfiguration renaming;
 
 	private List<Metric> metrics;
-	
+
 	public String getFilenameMetricName() {
-		
+
 		for (Metric m : metrics) {
 			if (Boolean.TRUE.equals(m.getFilename())) {
 				return m.getName();
 			}
 		}
-		
+
 		throw new IllegalArgumentException("Filename metric not found for " + file);
-		
+
 	}
 
 }

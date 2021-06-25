@@ -18,7 +18,7 @@ import mx.uam.archinaut.data.nameprocessing.NameProcessor;
 
 @Component
 public class LogLoader {
-	
+
 	private static final String FILENAMEHEADER = "entity";
 	private static final String REVISIONSHEADER = "n-revs";
 	private static final String COUPLEDHEADER = "coupled";
@@ -28,11 +28,10 @@ public class LogLoader {
 	private static final String CHURNREMOVED = "removed";
 	private static final String COCHANGESHEADER = "cochanges";
 	private static final String BUGCOMMITS = "bugs";
-	
+
 	private static final String DEFAULT_FREQUENCIES_FILENAME = "frequencies.csv";
 
 	// The logger
 	private static final Logger logger = LoggerFactory.getLogger(LogLoader.class);
 
 }
-

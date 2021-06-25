@@ -11,20 +11,20 @@ import mx.uam.archinaut.model.yaml.Substitution;
 
 @Component
 public class NameProcessor {
-	
+
 	public String processName(RenamingConfiguration renamingConfiguration, String nameToProcess) {
-		
+
 		String result = nameToProcess.replace(renamingConfiguration.getPrefix(), "");
-		
+
 		List<Substitution> substutions = renamingConfiguration.getSubstitutions();
 		Collections.sort(substutions);
-		
-		for(Substitution substitution : substutions) {
+
+		for (Substitution substitution : substutions) {
 			result = result.replace(substitution.getSubstitute(), substitution.getWith());
 		}
-		
+
 		return result;
-		
+
 	}
 
 }

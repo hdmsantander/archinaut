@@ -7,8 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class ElementMetric {
 
-    private String name;
-	
-    private int value;
-        
+	private String name;
+
+	private int value;
+
 }

@@ -11,7 +11,6 @@ import java.util.StringTokenizer;
 import lombok.extern.slf4j.Slf4j;
 import mx.uam.archinaut.model.MatrixElement.ElementStatus;
 
-
 /**
  * 
  * Class that represents a DesignStructureMatrix
@@ -21,82 +20,83 @@ import mx.uam.archinaut.model.MatrixElement.ElementStatus;
  */
 @Slf4j
 public class DesignStructureMatrix implements Serializable {
-	
+
 	private static final long serialVersionUID = -7697462458971200457L;
-		
+
 	// The root group
 	private MatrixElementGroup root;
-	
+
 	// The element names
-	private List <MatrixElement> elements = new ArrayList<>();
+	private List<MatrixElement> elements = new ArrayList<>();
 
 	// Element constraints
-	private ArrayList <ElementConstraint> elementConstraints = new ArrayList<>();
+	private ArrayList<ElementConstraint> elementConstraints = new ArrayList<>();
 
 	// Dependency constraints
-	private ArrayList <DependencyConstraint> dependencyConstraints = new ArrayList<>();
-	
-	// Map of full names to elements
-	private Map <String, MatrixElement> fullNameElementsMap = new HashMap <> ();
+	private ArrayList<DependencyConstraint> dependencyConstraints = new ArrayList<>();
 
 	// Map of full names to elements
-	private static Map <String, List<String>> renameMap = new HashMap <> ();
+	private Map<String, MatrixElement> fullNameElementsMap = new HashMap<>();
+
+	// Map of full names to elements
+	private static Map<String, List<String>> renameMap = new HashMap<>();
 
 	// Diff
 	private ArchitecturalDiff diff;
 
 	// Maximums for dependency values
-	private int [] maximumDependencyValues = new int [DependencyMetric.values().length];
+	private int[] maximumDependencyValues = new int[DependencyMetric.values().length];
 
 	// Maximums for element values
 	private Map<String, Integer> maximumElementValues = new HashMap<>();
 
 	// Maximums for element values
 	private Map<String, Integer> minimumElementValues = new HashMap<>();
-		
+
 	private String fileName;
-	
+
 	private String elementNamesPrefix;
-	
+
 	private String metricsNamesPrefix;
-	
+
 	private String logNamesPrefix;
-	
+
 	private String filesExtension;
-	
+
 	// Exclusion strings
-	private List <String> exclusionStrings = new ArrayList<>();
+	private List<String> exclusionStrings = new ArrayList<>();
 
 	/**
 	 * 
-	 * Create a DesignStructureMatrix with an array of element names and an array of 
+	 * Create a DesignStructureMatrix with an array of element names and an array of
 	 * DesignStructureMatrixCells which contain information about the dependencies
 	 * 
-	 * @param elements an array with the names of the elements
-	 * @param dependencies a square array with DesignStructureMatrixCells which contain the details of the dependencies
+	 * @param elements     an array with the names of the elements
+	 * @param dependencies a square array with DesignStructureMatrixCells which
+	 *                     contain the details of the dependencies
 	 */
-	public DesignStructureMatrix(String fileName, List <MatrixElement> elements) {
-		
+	public DesignStructureMatrix(String fileName, List<MatrixElement> elements) {
+
 		this.fileName = fileName;
 		this.elements = elements;
-		
+
 		for (MatrixElement m : elements) {
 			this.fullNameElementsMap.put(m.getFullName(), m);
 		}
-		
-		if(elements.size()>0) {
-			StringTokenizer tokenizer = new StringTokenizer(elements.get(0).getFullName(),"_");
-			while(tokenizer.hasMoreTokens()) {
+
+		if (elements.size() > 0) {
+			StringTokenizer tokenizer = new StringTokenizer(elements.get(0).getFullName(), "_");
+			while (tokenizer.hasMoreTokens()) {
 				filesExtension = tokenizer.nextToken();
 			}
-			//logger.info("Inferred file extension:"+filesExtension);
+			// logger.info("Inferred file extension:"+filesExtension);
 		}
 	}
-	
+
 	public String getFilesExtension() {
 		return filesExtension;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -104,7 +104,7 @@ public class DesignStructureMatrix implements Serializable {
 	public Iterable<MatrixElement> getElements() {
 		return elements;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -112,20 +112,21 @@ public class DesignStructureMatrix implements Serializable {
 	public String getFileName() {
 		return fileName;
 	}
-	
+
 	public Set<String> getMetricNames() {
 		return elements.get(0).getMetrics().keySet();
 	}
-	
+
 	/**
-	 * Method so that the DesignStructureMatrixModel can create a model with the elements from the matrix
+	 * Method so that the DesignStructureMatrixModel can create a model with the
+	 * elements from the matrix
 	 * 
 	 * @return
 	 */
-	List <MatrixElement> getElementsAsList() {
+	List<MatrixElement> getElementsAsList() {
 		return elements;
 	}
-		
+
 	/**
 	 * Returns the number of elements in the matrix
 	 * 
@@ -134,9 +135,7 @@ public class DesignStructureMatrix implements Serializable {
 	public int getElementsCount() {
 		return elements.size();
 	}
-	
-	
-		
+
 	/**
 	 * 
 	 * @param element
@@ -145,7 +144,7 @@ public class DesignStructureMatrix implements Serializable {
 	public int getIndexOfElement(MatrixElement element) {
 		return elements.indexOf(element);
 	}
-	
+
 	/**
 	 * 
 	 * @param index
@@ -160,35 +159,35 @@ public class DesignStructureMatrix implements Serializable {
 	 * @param root
 	 */
 	public void setRootGroup(MatrixElementGroup root) {
-		this.root = root;	
-		
-		// This is done in two passes otherwise there is a problem with the 
-		// lookup mechanism in 
+		this.root = root;
+
+		// This is done in two passes otherwise there is a problem with the
+		// lookup mechanism in
 		populateMap(root);
-		
+
 	}
-	
+
 	/**
 	 * Populate the map that associates a full name with an element
 	 * 
 	 * @param element
 	 */
 	private void populateMap(MatrixElement element) {
-				
+
 		fullNameElementsMap.put(element.getFullName(), element);
-		
-		if(element instanceof MatrixElementGroup) {
-			for(MatrixElement current:((MatrixElementGroup)element).getChildren()) {
+
+		if (element instanceof MatrixElementGroup) {
+			for (MatrixElement current : ((MatrixElementGroup) element).getChildren()) {
 				populateMap(current);
 			}
 		}
-		
+
 	}
-	
-	public static void setRenameMap(Map <String, List<String>> newRenameMap) {
+
+	public static void setRenameMap(Map<String, List<String>> newRenameMap) {
 		renameMap = newRenameMap;
 	}
-	
+
 	/**
 	 * Retrieve an element given its full name
 	 * 
@@ -196,61 +195,58 @@ public class DesignStructureMatrix implements Serializable {
 	 * @return
 	 */
 	public MatrixElement getElementByFullname(String name) {
-		
-		
+
 		name = name.replaceFirst("src\\.", "");
-		                                               
-		
+
 		MatrixElement element = fullNameElementsMap.get(name);
 
 		// If element is null, it may be a renamed element
-		if(element==null) {
+		if (element == null) {
 			// We get altenative names in the rename map
-			List <String> newNames = renameMap.get(name);
-			
+			List<String> newNames = renameMap.get(name);
+
 			// We now check if any of these alternative names are present in this matrix
-			if(newNames != null) {
-				
-				log.info("Found "+newNames.size()+" alternative names for element "+name+". Total number of renames:"+renameMap.size());
-				
-				
-				for(String candidateName:newNames) {
+			if (newNames != null) {
+
+				log.info("Found " + newNames.size() + " alternative names for element " + name
+						+ ". Total number of renames:" + renameMap.size());
+
+				for (String candidateName : newNames) {
 					element = fullNameElementsMap.get(candidateName);
-					if(element != null) {
+					if (element != null) {
 						return element;
-					} 
-				} 
+					}
+				}
 
-				log.info("Element "+name+" not found");
+				log.info("Element " + name + " not found");
 
-			} 
+			}
 		}
-		
+
 		return element;
 	}
-	
+
 	/**
-	 * Returns the status of the element in this matrix.
-	 * RENAMED: The element exists in this matrix under a different name
-	 * PRESENT: The element is present in this matrix
-	 * NOTPRESENT: The element is not present
+	 * Returns the status of the element in this matrix. RENAMED: The element exists
+	 * in this matrix under a different name PRESENT: The element is present in this
+	 * matrix NOTPRESENT: The element is not present
 	 * 
 	 * @param name
 	 * @return
 	 */
 	public ElementStatus getElementStatus(String name) {
 		MatrixElement element = fullNameElementsMap.get(name);
-		if(element==null) {
+		if (element == null) {
 			element = getElementByFullname(name);
-			if(element != null) {
+			if (element != null) {
 				return ElementStatus.RENAMED;
 			}
 		} else {
 			return ElementStatus.PRESENT;
 		}
-		return ElementStatus.NOTPRESENT;		
+		return ElementStatus.NOTPRESENT;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -258,7 +254,7 @@ public class DesignStructureMatrix implements Serializable {
 	public MatrixElementGroup getRootGroup() {
 		return root;
 	}
-	
+
 	/**
 	 * Add a new constraint
 	 * 
@@ -266,10 +262,10 @@ public class DesignStructureMatrix implements Serializable {
 	 * @return true if added successfully
 	 */
 	public boolean addDependencyConstraint(DependencyConstraint constraint) {
-		log.info("Added dependency constrant "+constraint );
+		log.info("Added dependency constrant " + constraint);
 		return dependencyConstraints.add(constraint);
 	}
-	
+
 	/**
 	 * Remove a constraint
 	 * 
@@ -279,7 +275,7 @@ public class DesignStructureMatrix implements Serializable {
 	public boolean removeDependencyConstraint(DependencyConstraint constraint) {
 		return dependencyConstraints.remove(constraint);
 	}
-	
+
 	/**
 	 * Add a new constraint
 	 * 
@@ -289,7 +285,7 @@ public class DesignStructureMatrix implements Serializable {
 	public boolean addElementConstraint(ElementConstraint constraint) {
 		return elementConstraints.add(constraint);
 	}
-	
+
 	/**
 	 * Remove a constraint
 	 * 
@@ -299,6 +295,7 @@ public class DesignStructureMatrix implements Serializable {
 	public boolean removeElementConstraint(ElementConstraint constraint) {
 		return elementConstraints.remove(constraint);
 	}
+
 	/**
 	 * 
 	 * @param source
@@ -306,32 +303,32 @@ public class DesignStructureMatrix implements Serializable {
 	 * @return
 	 */
 	public DependencyConstraint findDependencyConstraint(MatrixElement source, MatrixElement destination) {
-		for(DependencyConstraint constraint:dependencyConstraints) {
-			if(constraint.getSource()==source && constraint.getDestination()==destination) {
-					return constraint;
+		for (DependencyConstraint constraint : dependencyConstraints) {
+			if (constraint.getSource() == source && constraint.getDestination() == destination) {
+				return constraint;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Get the dependency constraints as an iterable
 	 * 
 	 * @return
 	 */
-	public Iterable <DependencyConstraint> getDependencyConstraints() {
+	public Iterable<DependencyConstraint> getDependencyConstraints() {
 		return dependencyConstraints;
 	}
-	
+
 	/**
 	 * Get the element constraints as an iterable
 	 * 
 	 * @return
 	 */
-	public Iterable <ElementConstraint> getElementConstraints() {
+	public Iterable<ElementConstraint> getElementConstraints() {
 		return elementConstraints;
 	}
-	
+
 	/**
 	 * Get total for a metric
 	 * 
@@ -340,14 +337,14 @@ public class DesignStructureMatrix implements Serializable {
 	 * @return
 	 */
 	public int getTotalForMetric(ElementMetric type) {
-		
+
 		int total = 0;
-		for(MatrixElement element:this.getElements()) {
+		for (MatrixElement element : this.getElements()) {
 			total += element.getMetricValue(type);
 		}
 		return total;
 	}
-	
+
 	public boolean setMaximumDependencyValue(DependencyMetric type, int value) {
 		maximumDependencyValues[type.getIndex()] = value;
 		return true;
@@ -357,7 +354,6 @@ public class DesignStructureMatrix implements Serializable {
 		return maximumDependencyValues[type.getIndex()];
 	}
 
-	
 	public boolean setMaximumElementValue(ElementMetric type, int value) {
 		maximumElementValues.put(type.getName(), value);
 		return true;
@@ -366,7 +362,7 @@ public class DesignStructureMatrix implements Serializable {
 	public int getMaximumElementValue(ElementMetric type) {
 		return maximumElementValues.get(type.getName());
 	}
-	
+
 	public boolean setMinumElementValue(ElementMetric type, int value) {
 		minimumElementValues.put(type.getName(), value);
 		return true;
@@ -376,7 +372,6 @@ public class DesignStructureMatrix implements Serializable {
 		return minimumElementValues.get(type.getName());
 	}
 
-	
 	public ArchitecturalDiff getDiff() {
 		return diff;
 	}
@@ -384,16 +379,16 @@ public class DesignStructureMatrix implements Serializable {
 	public void setDiff(ArchitecturalDiff diff) {
 		this.diff = diff;
 	}
-	
+
 	public void setElementNamesPrefix(String elementNamesPrefix) {
 		this.elementNamesPrefix = elementNamesPrefix;
-		
+
 	}
 
 	public String getElementNamesPrefix() {
 		return elementNamesPrefix;
 	}
-	
+
 	public void setMetricsNamesPrefix(String metricsNamesPrefix) {
 		this.metricsNamesPrefix = metricsNamesPrefix;
 	}
@@ -409,7 +404,7 @@ public class DesignStructureMatrix implements Serializable {
 	public String getLogNamesPrefix() {
 		return logNamesPrefix;
 	}
-	
+
 	/**
 	 * Add a new exclusion string
 	 * 
@@ -418,17 +413,17 @@ public class DesignStructureMatrix implements Serializable {
 	public void addExclusionString(String exclusionString) {
 		exclusionStrings.add(exclusionString);
 	}
-	
+
 	public void removeExclusionString(String exclusionString) {
 		exclusionStrings.remove(exclusionString);
 	}
-	
-	public List <String> getExclusionStrings() {
+
+	public List<String> getExclusionStrings() {
 		return exclusionStrings;
 	}
 
 	public boolean hasElementWithName(String name) {
 		return fullNameElementsMap.containsKey(name);
 	}
-	
+
 }

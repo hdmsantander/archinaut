@@ -25,14 +25,14 @@ import mx.uam.archinaut.model.MatrixElement;
 @Slf4j
 @Service
 public class GitLogService {
-		
+
 	private LogLoader loader;
-	
+
 	@Autowired
 	private NameProcessor nameProcessor;
-	
+
 	public GitLogService(LogLoader analizador) {
 		this.loader = analizador;
 	}
-		
+
 }
