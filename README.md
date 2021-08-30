@@ -1,12 +1,10 @@
 # Archinaut
-
 An open source tool to integrate metric results from other source code analysis tools. It generates a [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) file named _archinaut.csv_ containing all the combined metrics provided.
 It can also generate a XML report in the [JUnit](https://www.ibm.com/docs/en/z-open-unit-test/2.0.x?topic=SSZHNR_2.0.0/com.ibm.rsar.analysis.codereview.cobol.doc/topics/cac_useresults_junit.html) standard, given thresholds over the metrics analyzed by the tool.
 
 Usage: `java -jar archinaut.jar --configuration archinaut.yml`
 
 ## Configuration file
-
 Path to the configuration file that holds the Archinaut settings in a YAML format. The configuration file is divided by sections, each section being a source of metrics (metric report) that can be integrated by Archinaut. The current **formats** recognized by Archinaut are:
 
 - [CSV](https://en.wikipedia.org/wiki/Comma-separated_values)
@@ -117,7 +115,6 @@ metrics:
 ```
 
 ## Threshold inputs
-
 These inputs are _optional_ and serve to generate a JUnit format XML report with the threshold violations. These inputs are provided in the from of environment variables.
 
 Given any **metrics** declared in the configuration file, an input can be declared in the action specification, that will work as a threshold to generate a JUnit style XML report with the violations of said thresholds. For example, in the **archinaut.yml** file we specified the metrics _SCC_LOC_, _SCC_CLOC_ and _SCC_COMPLEXITY_, so we can declare the following inputs:
@@ -127,3 +124,6 @@ Given any **metrics** declared in the configuration file, an input can be declar
 - INPUT_SCC_COMPLEXITY=15
 
 These inputs will be parsed and used at runtime to generate a JUnit style XML report named _archinaut.xml_ with the violations detected.
+
+## GitHub action
+To use the project in a GitHub action please refer to the project found [here](https://github.com/hdmsantander/archinaut-action).
